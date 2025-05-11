@@ -1,0 +1,14 @@
+{
+  "name": "d3d12manager",
+  "version-semver": "0.0.1",
+  "dependencies": [
+    "d3dx12"
+  ],
+  "builtin-baseline": "ca846b21276c9a3171074ac8d2b4f6516894a7d0",
+  "overrides": [
+    {
+      "name": "d3dx12",
+      "version-string": "may2021"
+    }
+  ]
+}
