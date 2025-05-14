@@ -1,6 +1,9 @@
 #include "D3D12App.h"
+#include "SystemTime.h"
+
 #include "d3dx12.h"
 
+using namespace App;
 using namespace Microsoft::WRL;
 
 CD3D12App* CD3D12App::GApp = nullptr;
@@ -47,7 +50,6 @@ int CD3D12App::Run()
 
 	ShowWindow(GWindowHandle, SW_SHOWDEFAULT);
 
-	// Main sample loop.
 	MSG msg = {};
 	while (msg.message != WM_QUIT)
 	{
@@ -57,6 +59,14 @@ int CD3D12App::Run()
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+        else
+        {
+            float dt = SystemTime::GetElapsedTime();
+            SystemTime::StopClock();
+            OnUpdate(dt);
+            SystemTime::StartClock();
+
+        }
 	}
 
 	OnDestroy();
@@ -110,25 +120,23 @@ void CD3D12App::OnInit()
     ThrowIfFailed(swapChain.As(&m_swapChain));
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 
-    {
-        D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-        rtvHeapDesc.NumDescriptors = FrameCount;
-        rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-        rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-        ThrowIfFailed(m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_rtvHeap)));
+    D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
+    rtvHeapDesc.NumDescriptors = FrameCount;
+    rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+    rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    ThrowIfFailed(m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_backBufferRTVHeap)));
 
-        m_rtvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    m_rtvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_backBufferRTVHeap->GetCPUDescriptorHandleForHeapStart());
+    for (UINT n = 0; n < FrameCount; n++)
+    {
+        ThrowIfFailed(m_swapChain->GetBuffer(n, IID_PPV_ARGS(&m_backBufferRTVResources[n])));
+        m_device->CreateRenderTargetView(m_backBufferRTVResources[n].Get(), nullptr, rtvHandle);
+        rtvHandle.Offset(1, m_rtvDescriptorSize);
     }
 
-    {
-        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
-        for (UINT n = 0; n < FrameCount; n++)
-        {
-            ThrowIfFailed(m_swapChain->GetBuffer(n, IID_PPV_ARGS(&m_renderTargetResources[n])));
-            m_device->CreateRenderTargetView(m_renderTargetResources[n].Get(), nullptr, rtvHandle);
-            rtvHandle.Offset(1, m_rtvDescriptorSize);
-        }
-    }
+    SystemTime::Initialize();
 }
 
 void CD3D12App::OnCreateCommandQueue()
@@ -155,12 +163,6 @@ LRESULT __stdcall CD3D12App::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
 			}
 			break;
 		}
-		case WM_PAINT:
-		{
-			OnUpdate();
-			OnRender();
-			break;
-		}
 		case WM_DESTROY:
 		{
 			PostQuitMessage(0);
@@ -170,6 +172,7 @@ LRESULT __stdcall CD3D12App::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
 	return ::DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
+// From DirectX12 Example https://github.com/microsoft/DirectX-Graphics-Samples
 void CD3D12App::GetHardwareAdapter(
 	IDXGIFactory1* pFactory, 
 	IDXGIAdapter1** ppAdapter, 

@@ -150,6 +150,9 @@
     <ClCompile Include="BaseCamera.cpp" />
     <ClCompile Include="D3D12App.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="HResultException.cpp" />
+    <ClCompile Include="SystemTime.cpp" />
+    <ClCompile Include="Win32Exception.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AMovable.h" />
@@ -160,7 +163,10 @@
     <ClInclude Include="D3D12DllHelper.h" />
     <ClInclude Include="AControlable.h" />
     <ClInclude Include="AController.h" />
+    <ClInclude Include="HResultException.h" />
     <ClInclude Include="IObject.h" />
+    <ClInclude Include="SystemTime.h" />
+    <ClInclude Include="Win32Exception.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />

@@ -25,6 +25,12 @@
     <Filter Include="헤더 파일\Object\Camera">
       <UniqueIdentifier>{c714e61d-60d4-496d-85f3-281fa9c196d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Exception">
+      <UniqueIdentifier>{6fce7049-14eb-435d-9471-420541b3668d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Exception">
+      <UniqueIdentifier>{b7e772c4-bc02-46f9-9de5-e10d0650132f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -41,6 +47,15 @@
     </ClCompile>
     <ClCompile Include="ARotatable.cpp">
       <Filter>소스 파일\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemTime.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32Exception.cpp">
+      <Filter>소스 파일\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="HResultException.cpp">
+      <Filter>소스 파일\Exception</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +85,15 @@
     </ClInclude>
     <ClInclude Include="D3D12AppHelper.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemTime.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32Exception.h">
+      <Filter>헤더 파일\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="HResultException.h">
+      <Filter>헤더 파일\Exception</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
