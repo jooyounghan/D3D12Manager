@@ -6,6 +6,7 @@ using namespace App;
 using namespace Exception;
 
 LARGE_INTEGER SystemTime::m_frequency;
+LARGE_INTEGER SystemTime::m_firstTime;
 LARGE_INTEGER SystemTime::m_prevTime;
 bool SystemTime::m_isWorking;
 
@@ -14,11 +15,11 @@ inline bool IsTimerFailed(BOOL result) { return result == 0; }
 void SystemTime::Initialize()
 {
 	ZeroMemory(&m_frequency, sizeof(LARGE_INTEGER));
+	ZeroMemory(&m_firstTime, sizeof(LARGE_INTEGER));
 	ZeroMemory(&m_prevTime, sizeof(LARGE_INTEGER));
 	m_isWorking = false;
 
-	BOOL result = QueryPerformanceFrequency(&m_frequency);
-	if (IsTimerFailed(result))
+	if (!QueryPerformanceFrequency(&m_frequency) || !QueryPerformanceCounter(&m_firstTime)) 
 	{
 		throw Win32Exception();
 	}
@@ -39,13 +40,22 @@ void App::SystemTime::StopClock() noexcept
 	m_isWorking = false;
 }
 
-float App::SystemTime::GetElapsedTime()
+float App::SystemTime::GetMeasuredTime()
 {
 	if (!m_isWorking) return 0.f;
+	return GetElapsedTime(m_prevTime.QuadPart);
+}
 
+float App::SystemTime::GetTotalTime()
+{
+	return GetElapsedTime(m_firstTime.QuadPart);
+}
+
+float App::SystemTime::GetElapsedTime(LONGLONG prevTimeQuadPart)
+{
 	LARGE_INTEGER currentTime;
 	if (IsTimerFailed(QueryPerformanceCounter(&currentTime))) throw Win32Exception();
 
-	LONGLONG elapsed = currentTime.QuadPart - m_prevTime.QuadPart;
+	LONGLONG elapsed = currentTime.QuadPart - prevTimeQuadPart;
 	return static_cast<float>(elapsed) / m_frequency.QuadPart;
 }

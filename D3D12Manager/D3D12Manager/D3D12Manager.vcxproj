@@ -148,21 +148,32 @@
     <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ARotatable.cpp" />
     <ClCompile Include="BaseCamera.cpp" />
+    <ClCompile Include="CommandAllocatorPool.cpp" />
+    <ClCompile Include="CommandListPool.cpp" />
+    <ClCompile Include="CommandQueueManager.cpp" />
+    <ClCompile Include="CriticalSectionLock.cpp" />
     <ClCompile Include="D3D12App.cpp" />
+    <ClCompile Include="D3D12Exception.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="HResultException.cpp" />
     <ClCompile Include="SystemTime.cpp" />
     <ClCompile Include="Win32Exception.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AD3D12Exception.h" />
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ARotatable.h" />
     <ClInclude Include="BaseCamera.h" />
+    <ClInclude Include="CommandAllocatorPool.h" />
+    <ClInclude Include="CommandListPool.h" />
+    <ClInclude Include="CommandQueueManager.h" />
+    <ClInclude Include="CriticalSectionLock.h" />
     <ClInclude Include="D3D12App.h" />
     <ClInclude Include="D3D12AppHelper.h" />
     <ClInclude Include="D3D12DllHelper.h" />
     <ClInclude Include="AControlable.h" />
     <ClInclude Include="AController.h" />
+    <ClInclude Include="D3D12Exception.h" />
     <ClInclude Include="HResultException.h" />
     <ClInclude Include="IObject.h" />
     <ClInclude Include="SystemTime.h" />

@@ -1,19 +1,15 @@
 #include "Win32Exception.h"
-#include <sstream>
+#include <cstdio>
 
 using namespace std;
 using namespace Exception;
 
 Win32Exception::Win32Exception(DWORD errorCode, const char* context)
-    : m_errorCode(errorCode)
 {
+    m_errorCode = errorCode;
     m_message[0] = '\0';
     FormatErrorMessage(errorCode, context);
 }
-
-DWORD Win32Exception::code() const noexcept { return m_errorCode; }
-
-const char* Win32Exception::message() const noexcept { return m_message; }
 
 void Win32Exception::FormatErrorMessage(DWORD errorCode, const char* context) 
 {
@@ -30,16 +26,18 @@ void Win32Exception::FormatErrorMessage(DWORD errorCode, const char* context)
     );
 
     if (sysMsg) {
-        if (context) {
-            std::snprintf(m_message, sizeof(m_message), "%s: %s", context, sysMsg);
+        if (context) 
+        {
+            sprintf_s(m_message, sizeof(m_message), "%s: %s", context, sysMsg);
         }
         else {
-            std::snprintf(m_message, sizeof(m_message), "%s", sysMsg);
+            sprintf_s(m_message, sizeof(m_message), "%s", sysMsg);
         }
         LocalFree(sysMsg);
     }
-    else {
-        std::snprintf(m_message, sizeof(m_message), "%s: Unknown error (code %lu)",
+    else 
+    {
+        sprintf_s(m_message, sizeof(m_message), "%s: Unknown error (code %lu)",
             context ? context : "Error", errorCode);
     }
 }

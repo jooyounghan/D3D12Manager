@@ -31,6 +31,18 @@
     <Filter Include="헤더 파일\Exception">
       <UniqueIdentifier>{b7e772c4-bc02-46f9-9de5-e10d0650132f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Command">
+      <UniqueIdentifier>{9a72c9f9-a147-46de-9ce6-b358ab3dca03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Command">
+      <UniqueIdentifier>{5de0f78b-d536-400c-8e1c-efb2d9963165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Utilities">
+      <UniqueIdentifier>{de06c3e2-9e11-4b9a-a9e4-7844821a2697}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Utilities">
+      <UniqueIdentifier>{a21cb7e3-1d9f-4f50-9595-51e38edf7c97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -56,6 +68,21 @@
     </ClCompile>
     <ClCompile Include="HResultException.cpp">
       <Filter>소스 파일\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandQueueManager.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandListPool.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandAllocatorPool.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D12Exception.cpp">
+      <Filter>소스 파일\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="CriticalSectionLock.cpp">
+      <Filter>소스 파일\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +121,24 @@
     </ClInclude>
     <ClInclude Include="HResultException.h">
       <Filter>헤더 파일\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandQueueManager.h">
+      <Filter>헤더 파일\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandListPool.h">
+      <Filter>헤더 파일\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandAllocatorPool.h">
+      <Filter>헤더 파일\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="AD3D12Exception.h">
+      <Filter>헤더 파일\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D12Exception.h">
+      <Filter>헤더 파일\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="CriticalSectionLock.h">
+      <Filter>헤더 파일\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

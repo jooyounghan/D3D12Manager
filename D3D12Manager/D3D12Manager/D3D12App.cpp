@@ -61,11 +61,9 @@ int CD3D12App::Run()
 		}
         else
         {
-            float dt = SystemTime::GetElapsedTime();
             SystemTime::StopClock();
-            OnUpdate(dt);
+            OnUpdate(SystemTime::GetMeasuredTime());
             SystemTime::StartClock();
-
         }
 	}
 

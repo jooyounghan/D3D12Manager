@@ -10,6 +10,7 @@ namespace App
 
 	protected:
 		static LARGE_INTEGER m_frequency;
+		static LARGE_INTEGER m_firstTime;
 		static LARGE_INTEGER m_prevTime;
 		static bool m_isWorking;
 
@@ -17,6 +18,12 @@ namespace App
 	public:
 		static void StartClock();
 		static void StopClock() noexcept;
-		static float GetElapsedTime();
+		static float GetMeasuredTime();
+
+	public:
+		static float GetTotalTime();
+
+	protected:
+		static float GetElapsedTime(LONGLONG prevTimeQuadPart);
 	};
 }
