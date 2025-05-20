@@ -5,6 +5,6 @@ inline void ThrowIfFailed(HRESULT hr)
 {
     if (FAILED(hr))
     {
-        throw Exception::HResultException(hr);
+        throw Exception::CHResultException(hr);
     }
 }

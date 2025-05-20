@@ -3,14 +3,14 @@
 
 using namespace Exception;
 
-D3D12Exception::D3D12Exception(ED3D12ExceptionCode exceptionCode)
+CD3D12Exception::CD3D12Exception(ED3D12ExceptionCode exceptionCode)
 {
 	m_errorCode = static_cast<DWORD>(exceptionCode);
     m_message[0] = '\0';
     FormatErrorMessage(m_errorCode, nullptr);
 }
 
-void D3D12Exception::FormatErrorMessage(DWORD errorCode, const char* context)
+void CD3D12Exception::FormatErrorMessage(DWORD errorCode, const char* context)
 {
     sprintf_s(m_message, sizeof(m_message), "%s", GExceptionMessages[errorCode]);
 }

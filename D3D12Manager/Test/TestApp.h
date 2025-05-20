@@ -1,5 +1,14 @@
 #pragma once
 #include "D3D12App.h"
+#include "CommandContext.h"
+
+#include <memory>
+
+namespace Command
+{
+    class CCommandContext;
+}
+
 class CTestApp : public App::CD3D12App
 {
 public:
@@ -16,11 +25,10 @@ protected:
     virtual void OnDestroy() override;
 
 protected:
-    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> m_commandAllocator;
+    std::unique_ptr<Command::CCommandContext> m_commandContext;
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> m_pipelineState;
-    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_commandList;
 
 protected:
     Microsoft::WRL::ComPtr<ID3D12Fence> m_fence;

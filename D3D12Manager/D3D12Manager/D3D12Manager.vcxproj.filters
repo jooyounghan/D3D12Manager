@@ -69,20 +69,20 @@
     <ClCompile Include="HResultException.cpp">
       <Filter>소스 파일\Exception</Filter>
     </ClCompile>
-    <ClCompile Include="CommandQueueManager.cpp">
-      <Filter>소스 파일\Command</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandListPool.cpp">
-      <Filter>소스 파일\Command</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandAllocatorPool.cpp">
-      <Filter>소스 파일\Command</Filter>
-    </ClCompile>
     <ClCompile Include="D3D12Exception.cpp">
       <Filter>소스 파일\Exception</Filter>
     </ClCompile>
     <ClCompile Include="CriticalSectionLock.cpp">
       <Filter>소스 파일\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandContext.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandContextPool.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="QueueContext.cpp">
+      <Filter>소스 파일\Command</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,15 +122,6 @@
     <ClInclude Include="HResultException.h">
       <Filter>헤더 파일\Exception</Filter>
     </ClInclude>
-    <ClInclude Include="CommandQueueManager.h">
-      <Filter>헤더 파일\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandListPool.h">
-      <Filter>헤더 파일\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandAllocatorPool.h">
-      <Filter>헤더 파일\Command</Filter>
-    </ClInclude>
     <ClInclude Include="AD3D12Exception.h">
       <Filter>헤더 파일\Exception</Filter>
     </ClInclude>
@@ -139,6 +130,15 @@
     </ClInclude>
     <ClInclude Include="CriticalSectionLock.h">
       <Filter>헤더 파일\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandContext.h">
+      <Filter>헤더 파일\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandContextPool.h">
+      <Filter>헤더 파일\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="QueueContext.h">
+      <Filter>헤더 파일\Command</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

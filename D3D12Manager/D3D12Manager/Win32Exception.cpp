@@ -4,14 +4,14 @@
 using namespace std;
 using namespace Exception;
 
-Win32Exception::Win32Exception(DWORD errorCode, const char* context)
+CWin32Exception::CWin32Exception(DWORD errorCode, const char* context)
 {
     m_errorCode = errorCode;
     m_message[0] = '\0';
     FormatErrorMessage(errorCode, context);
 }
 
-void Win32Exception::FormatErrorMessage(DWORD errorCode, const char* context) 
+void CWin32Exception::FormatErrorMessage(DWORD errorCode, const char* context) 
 {
     char* sysMsg = nullptr;
 

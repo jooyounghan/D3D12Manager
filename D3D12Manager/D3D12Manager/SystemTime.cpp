@@ -21,7 +21,7 @@ void SystemTime::Initialize()
 
 	if (!QueryPerformanceFrequency(&m_frequency) || !QueryPerformanceCounter(&m_firstTime)) 
 	{
-		throw Win32Exception();
+		throw CWin32Exception();
 	}
 }
 
@@ -29,7 +29,7 @@ void App::SystemTime::StartClock()
 {
 	if (IsTimerFailed(QueryPerformanceCounter(&m_prevTime)))
 	{
-		throw Win32Exception();
+		throw CWin32Exception();
 	}
 	m_isWorking = true;
 }
@@ -54,7 +54,7 @@ float App::SystemTime::GetTotalTime()
 float App::SystemTime::GetElapsedTime(LONGLONG prevTimeQuadPart)
 {
 	LARGE_INTEGER currentTime;
-	if (IsTimerFailed(QueryPerformanceCounter(&currentTime))) throw Win32Exception();
+	if (IsTimerFailed(QueryPerformanceCounter(&currentTime))) throw CWin32Exception();
 
 	LONGLONG elapsed = currentTime.QuadPart - prevTimeQuadPart;
 	return static_cast<float>(elapsed) / m_frequency.QuadPart;

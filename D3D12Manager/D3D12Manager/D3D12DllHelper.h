@@ -13,6 +13,8 @@ namespace D3D12
 #endif
 }
 
+#define SINGLE_THREAD_ONLY [[maybe_unused]] 
+
 template class D3D12MANAGER_API Microsoft::WRL::ComPtr<ID3D12Device>;
 template class D3D12MANAGER_API Microsoft::WRL::ComPtr<ID3D12CommandQueue>;
 template class D3D12MANAGER_API Microsoft::WRL::ComPtr<IDXGISwapChain3>;

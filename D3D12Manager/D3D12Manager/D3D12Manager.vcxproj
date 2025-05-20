@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -148,14 +148,14 @@
     <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ARotatable.cpp" />
     <ClCompile Include="BaseCamera.cpp" />
-    <ClCompile Include="CommandAllocatorPool.cpp" />
-    <ClCompile Include="CommandListPool.cpp" />
-    <ClCompile Include="CommandQueueManager.cpp" />
+    <ClCompile Include="CommandContext.cpp" />
+    <ClCompile Include="CommandContextPool.cpp" />
     <ClCompile Include="CriticalSectionLock.cpp" />
     <ClCompile Include="D3D12App.cpp" />
     <ClCompile Include="D3D12Exception.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="HResultException.cpp" />
+    <ClCompile Include="QueueContext.cpp" />
     <ClCompile Include="SystemTime.cpp" />
     <ClCompile Include="Win32Exception.cpp" />
   </ItemGroup>
@@ -164,9 +164,8 @@
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ARotatable.h" />
     <ClInclude Include="BaseCamera.h" />
-    <ClInclude Include="CommandAllocatorPool.h" />
-    <ClInclude Include="CommandListPool.h" />
-    <ClInclude Include="CommandQueueManager.h" />
+    <ClInclude Include="CommandContext.h" />
+    <ClInclude Include="CommandContextPool.h" />
     <ClInclude Include="CriticalSectionLock.h" />
     <ClInclude Include="D3D12App.h" />
     <ClInclude Include="D3D12AppHelper.h" />
@@ -176,6 +175,7 @@
     <ClInclude Include="D3D12Exception.h" />
     <ClInclude Include="HResultException.h" />
     <ClInclude Include="IObject.h" />
+    <ClInclude Include="QueueContext.h" />
     <ClInclude Include="SystemTime.h" />
     <ClInclude Include="Win32Exception.h" />
   </ItemGroup>

@@ -3,14 +3,14 @@
 
 using namespace Exception;
 
-HResultException::HResultException(HRESULT hr, const char* context)
+CHResultException::CHResultException(HRESULT hr, const char* context)
 {
     m_errorCode = hr;
     m_message[0] = '\0';
     FormatErrorMessage(m_errorCode, context);
 }
 
-void HResultException::FormatErrorMessage(DWORD errorCode, const char* context) {
+void CHResultException::FormatErrorMessage(DWORD errorCode, const char* context) {
     char* sysMsg = nullptr;
     FormatMessageA(
         FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
