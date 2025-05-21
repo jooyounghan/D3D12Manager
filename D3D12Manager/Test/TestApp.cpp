@@ -20,7 +20,7 @@ void CTestApp::OnInit()
 	DescriptorHelper::InitializeDescriptorHelper(m_device.Get());
 	
 	m_queueContext = make_unique<CQueueContext>(
-		nullptr,
+		[&](CQueueContext*) {m_swapchainContext->UpdateContext(); },
 		m_device.Get(),
 		D3D12_COMMAND_QUEUE_FLAG_NONE,
 		D3D12_COMMAND_LIST_TYPE_DIRECT
@@ -58,10 +58,8 @@ inline void CTestApp::OnUpdate(float dt)
 	m_queueContext->ExecuteCommandLists(1, commandContexts);
 
 	m_swapchainContext->Present(1, 0);
-
 	m_queueContext->WaitForGpuSync();
 
-	m_swapchainContext->UpdateContext();
 	clearColor[0] += (1.f * dt);
 }
 

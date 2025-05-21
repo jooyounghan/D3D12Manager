@@ -23,6 +23,3 @@ template class D3D12MANAGER_API Microsoft::WRL::ComPtr<ID3D12Resource>;
 template class D3D12MANAGER_API Microsoft::WRL::ComPtr<IDXGIFactory4>;
 template class D3D12MANAGER_API Microsoft::WRL::ComPtr<IDXGIAdapter1>;
 
-
-
-

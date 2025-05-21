@@ -49,6 +49,12 @@
     <Filter Include="헤더 파일\Graphics">
       <UniqueIdentifier>{174372bf-58a4-48e1-8c06-47fcbf44efcd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Frame">
+      <UniqueIdentifier>{13b9b72e-4e35-49c9-94f9-49d4b20faffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Frame">
+      <UniqueIdentifier>{f0360f42-6620-4840-91b1-ef57fba926b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

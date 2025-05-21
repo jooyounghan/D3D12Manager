@@ -3,6 +3,7 @@
 #include "D3D12AppHelper.h"
 #include "Win32Exception.h"
 
+using namespace std;
 using namespace Command;
 using namespace Exception;
 
@@ -16,7 +17,7 @@ void CALLBACK FenceCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 }
 
 CQueueContext::CQueueContext(
-	GpuCompleteHandler gpuCompleteHandler,
+	function<void(CQueueContext*)> gpuCompleteHandler,
 	ID3D12Device* device, 
 	D3D12_COMMAND_QUEUE_FLAGS commandQueueFlag,
 	D3D12_COMMAND_LIST_TYPE commandType, 
@@ -54,32 +55,9 @@ void CQueueContext::WaitForGpuSync()
 	OnGpuCompleted();
 }
 
-void CQueueContext::WaitForGpuAsync()
-{
-	ThrowIfHResultFailed(m_commandQueue->Signal(m_fence, m_expectedFenceValue));
-
-	if (m_fence->GetCompletedValue() < m_expectedFenceValue)
-	{
-		HANDLE waitHandle = nullptr;
-		ThrowIfHResultFailed(m_fence->SetEventOnCompletion(m_expectedFenceValue, m_fenceEvent));
-		RegisterWaitForSingleObject(
-			&waitHandle,
-			m_fenceEvent,
-			FenceCallback,
-			this,
-			INFINITE,
-			WT_EXECUTEONLYONCE | WT_EXECUTEDEFAULT
-		);
-	}
-	else
-	{
-		OnGpuCompleted();
-	}
-}
-
 void CQueueContext::OnGpuCompleted()
 {
-	if (m_gpuCompleteHandler) m_gpuCompleteHandler(this);
+	m_gpuCompleteHandler(this);
 	m_expectedFenceValue++;
 }
 
@@ -98,4 +76,17 @@ void CQueueContext::ExecuteCommandLists(
 		commandLists[idx] = ppCommandContext[idx]->GetCommandList(false);
 	}
 	m_commandQueue->ExecuteCommandLists(numCommandContext, commandLists);
+}
+
+void CQueueContext::IncrementFenceValue()
+{
+	InterlockedIncrement64(reinterpret_cast<volatile LONGLONG*>(&m_expectedFenceValue));
+}
+
+UINT64 CQueueContext::ReadFenceValue()
+{
+	return InterlockedCompareExchange64(
+		reinterpret_cast<volatile LONGLONG*>(&m_expectedFenceValue),
+		0, 0
+	);
 }

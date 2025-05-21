@@ -1,18 +1,18 @@
 #pragma once
 #include "D3D12DllHelper.h"
+#include <functional>
 
 namespace Command
 {
 	class CCommandContext;
 	class CQueueContext;
-
-	typedef void(* GpuCompleteHandler)(CQueueContext* queueContext);
+	template class D3D12MANAGER_API std::function<void(CQueueContext*)>;
 
 	class D3D12MANAGER_API SINGLE_THREAD_ONLY CQueueContext
 	{
 	public:
 		CQueueContext(
-			GpuCompleteHandler gpuCompleteHandler,
+			std::function<void(CQueueContext*)> gpuCompleteHandler,
 			ID3D12Device* device,
 			D3D12_COMMAND_QUEUE_FLAGS commandQueueFlag,
 			D3D12_COMMAND_LIST_TYPE commandType,
@@ -33,14 +33,19 @@ namespace Command
 		HANDLE m_fenceEvent = NULL;
 		
 	protected:
-		GpuCompleteHandler m_gpuCompleteHandler;
+		std::function<void(CQueueContext*)> m_gpuCompleteHandler = [](CQueueContext*) {};
 		UINT64 m_expectedFenceValue;
+
+	protected:
+		void IncrementFenceValue();
+
+	public:
+		UINT64 ReadFenceValue();
 
 	public:
 		void OnGpuCompleted();
 		void ExecuteCommandLists(UINT numCommandContext, CCommandContext* const* ppCommandContext);
 		void WaitForGpuSync();
-		void WaitForGpuAsync();
 	};
 }
 
