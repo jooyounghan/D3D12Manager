@@ -153,9 +153,11 @@
     <ClCompile Include="CriticalSectionLock.cpp" />
     <ClCompile Include="D3D12App.cpp" />
     <ClCompile Include="D3D12Exception.cpp" />
+    <ClCompile Include="DescriptorHelper.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="HResultException.cpp" />
     <ClCompile Include="QueueContext.cpp" />
+    <ClCompile Include="SwapchainContext.cpp" />
     <ClCompile Include="SystemTime.cpp" />
     <ClCompile Include="Win32Exception.cpp" />
   </ItemGroup>
@@ -173,9 +175,11 @@
     <ClInclude Include="AControlable.h" />
     <ClInclude Include="AController.h" />
     <ClInclude Include="D3D12Exception.h" />
+    <ClInclude Include="DescriptorHelper.h" />
     <ClInclude Include="HResultException.h" />
     <ClInclude Include="IObject.h" />
     <ClInclude Include="QueueContext.h" />
+    <ClInclude Include="SwapchainContext.h" />
     <ClInclude Include="SystemTime.h" />
     <ClInclude Include="Win32Exception.h" />
   </ItemGroup>

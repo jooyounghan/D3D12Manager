@@ -43,6 +43,12 @@
     <Filter Include="소스 파일\Utilities">
       <UniqueIdentifier>{a21cb7e3-1d9f-4f50-9595-51e38edf7c97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Graphics">
+      <UniqueIdentifier>{0987d250-5be1-49e8-9d8f-4b986eb97a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Graphics">
+      <UniqueIdentifier>{174372bf-58a4-48e1-8c06-47fcbf44efcd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -83,6 +89,12 @@
     </ClCompile>
     <ClCompile Include="QueueContext.cpp">
       <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="SwapchainContext.cpp">
+      <Filter>소스 파일\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorHelper.cpp">
+      <Filter>소스 파일\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +151,12 @@
     </ClInclude>
     <ClInclude Include="QueueContext.h">
       <Filter>헤더 파일\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapchainContext.h">
+      <Filter>헤더 파일\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorHelper.h">
+      <Filter>헤더 파일\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 #include "SystemTime.h"
-#include "Win32Exception.h"
+#include "D3D12AppHelper.h"
 
 using namespace std;
 using namespace App;
@@ -19,18 +19,12 @@ void SystemTime::Initialize()
 	ZeroMemory(&m_prevTime, sizeof(LARGE_INTEGER));
 	m_isWorking = false;
 
-	if (!QueryPerformanceFrequency(&m_frequency) || !QueryPerformanceCounter(&m_firstTime)) 
-	{
-		throw CWin32Exception();
-	}
+	ThrowIfWinResultFailed(QueryPerformanceFrequency(&m_frequency) && QueryPerformanceCounter(&m_firstTime), 0, ECompareMethod::NOT_EQUAL);
 }
 
 void App::SystemTime::StartClock()
 {
-	if (IsTimerFailed(QueryPerformanceCounter(&m_prevTime)))
-	{
-		throw CWin32Exception();
-	}
+	ThrowIfWinResultFailed(QueryPerformanceCounter(&m_prevTime), 0, ECompareMethod::NOT_EQUAL);
 	m_isWorking = true;
 }
 
@@ -54,8 +48,8 @@ float App::SystemTime::GetTotalTime()
 float App::SystemTime::GetElapsedTime(LONGLONG prevTimeQuadPart)
 {
 	LARGE_INTEGER currentTime;
-	if (IsTimerFailed(QueryPerformanceCounter(&currentTime))) throw CWin32Exception();
 
+	ThrowIfWinResultFailed(QueryPerformanceCounter(&currentTime), 0, ECompareMethod::NOT_EQUAL);
 	LONGLONG elapsed = currentTime.QuadPart - prevTimeQuadPart;
 	return static_cast<float>(elapsed) / m_frequency.QuadPart;
 }

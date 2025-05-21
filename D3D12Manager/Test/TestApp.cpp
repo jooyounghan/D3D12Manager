@@ -42,12 +42,12 @@ inline void CTestApp::OnUpdate(float dt)
 	ID3D12CommandList* commandLists[] = { cmdList };
 	m_mainCommandQueue->ExecuteCommandLists(1, commandLists);
 
-	ThrowIfFailed(m_swapChain->Present(1, 0));
+	ThrowIfHResultFailed(m_swapChain->Present(1, 0));
 
-	ThrowIfFailed(m_mainCommandQueue->Signal(m_fence.Get(), m_fenceValue));
+	ThrowIfHResultFailed(m_mainCommandQueue->Signal(m_fence.Get(), m_fenceValue));
 
 	if (m_fence->GetCompletedValue() < m_fenceValue) {
-		ThrowIfFailed(m_fence->SetEventOnCompletion(m_fenceValue, m_fenceEvent));
+		ThrowIfHResultFailed(m_fence->SetEventOnCompletion(m_fenceValue, m_fenceEvent));
 		WaitForSingleObject(m_fenceEvent, INFINITE);
 	}
 	m_fenceValue++;

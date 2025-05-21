@@ -85,12 +85,12 @@ void CD3D12App::OnInit()
     #endif
 
     ComPtr<IDXGIFactory4> factory;
-    ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&factory)));
+    ThrowIfHResultFailed(CreateDXGIFactory1(IID_PPV_ARGS(&factory)));
 
     ComPtr<IDXGIAdapter1> hardwareAdapter;
     GetHardwareAdapter(factory.Get(), &hardwareAdapter);
 
-    ThrowIfFailed(D3D12CreateDevice(
+    ThrowIfHResultFailed(D3D12CreateDevice(
         hardwareAdapter.Get(),
         D3D_FEATURE_LEVEL_11_0,
         IID_PPV_ARGS(&m_device)
@@ -110,26 +110,26 @@ void CD3D12App::OnInit()
     OnCreateCommandQueue();
 
     ComPtr<IDXGISwapChain> swapChain;
-    ThrowIfFailed(factory->CreateSwapChain(
+    ThrowIfHResultFailed(factory->CreateSwapChain(
         m_mainCommandQueue.Get(),
         &swapChainDesc,
         &swapChain
     ));
-    ThrowIfFailed(swapChain.As(&m_swapChain));
+    ThrowIfHResultFailed(swapChain.As(&m_swapChain));
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 
     D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
     rtvHeapDesc.NumDescriptors = FrameCount;
     rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
     rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    ThrowIfFailed(m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_backBufferRTVHeap)));
+    ThrowIfHResultFailed(m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_backBufferRTVHeap)));
 
     m_rtvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_backBufferRTVHeap->GetCPUDescriptorHandleForHeapStart());
     for (UINT n = 0; n < FrameCount; n++)
     {
-        ThrowIfFailed(m_swapChain->GetBuffer(n, IID_PPV_ARGS(&m_backBufferRTVResources[n])));
+        ThrowIfHResultFailed(m_swapChain->GetBuffer(n, IID_PPV_ARGS(&m_backBufferRTVResources[n])));
         m_device->CreateRenderTargetView(m_backBufferRTVResources[n].Get(), nullptr, rtvHandle);
         rtvHandle.Offset(1, m_rtvDescriptorSize);
     }
@@ -143,7 +143,7 @@ void CD3D12App::OnCreateCommandQueue()
     queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
     queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
-    ThrowIfFailed(m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_mainCommandQueue)));
+    ThrowIfHResultFailed(m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_mainCommandQueue)));
 }
 
 LRESULT __stdcall CD3D12App::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
