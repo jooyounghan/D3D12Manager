@@ -1,6 +1,8 @@
 #pragma once
 #include "D3D12App.h"
+#include "QueueContext.h"
 #include "CommandContext.h"
+#include "SwapchainContext.h"
 
 #include <memory>
 
@@ -25,15 +27,9 @@ protected:
     virtual void OnDestroy() override;
 
 protected:
+    std::unique_ptr<Command::CQueueContext> m_queueContext;
     std::unique_ptr<Command::CCommandContext> m_commandContext;
-    Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
-    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
-    Microsoft::WRL::ComPtr<ID3D12PipelineState> m_pipelineState;
-
-protected:
-    Microsoft::WRL::ComPtr<ID3D12Fence> m_fence;
-    UINT64 m_fenceValue = 0;
-    HANDLE m_fenceEvent = nullptr;
+    std::unique_ptr<Graphics::CSwapchainContext> m_swapchainContext;
 
 protected:
     virtual void OnSize(UINT width, UINT height) override {};

@@ -32,7 +32,7 @@ namespace Command
 
 	public:
 		ID3D12CommandAllocator* GetCommandAllocator() const { return m_commandAllocator; }
-		ID3D12GraphicsCommandList* GetCommandList() const;
+		ID3D12GraphicsCommandList* GetCommandList(bool expectedRecordState = true) const;
 	};
 }
 

@@ -1,7 +1,6 @@
 #include "Win32Exception.h"
 #include <cstdio>
 
-using namespace std;
 using namespace Exception;
 
 CWin32Exception::CWin32Exception(DWORD errorCode, const char* context)

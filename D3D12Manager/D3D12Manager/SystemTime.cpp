@@ -1,7 +1,6 @@
 #include "SystemTime.h"
 #include "D3D12AppHelper.h"
 
-using namespace std;
 using namespace App;
 using namespace Exception;
 

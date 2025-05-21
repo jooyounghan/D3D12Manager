@@ -32,6 +32,7 @@ namespace Graphics
 	public:
 		D3D12_RESOURCE_BARRIER CreateTransitionToRenderTargetBarrier() const noexcept;
 		D3D12_RESOURCE_BARRIER CreateTransitionToPresentBarrier() const noexcept;
+		D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferRTVHandle();
 
 	public:
 		void Present(UINT syncInterval, UINT flags);

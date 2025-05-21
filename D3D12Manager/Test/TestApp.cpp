@@ -1,9 +1,12 @@
 #include "TestApp.h"
 #include "d3dx12.h"
+#include "DescriptorHelper.h"
+#include <functional>
 
 using namespace std;
 using namespace App;
 using namespace Command;
+using namespace Graphics;
 
 CTestApp::CTestApp(UINT width, UINT height, const wchar_t* className, const wchar_t* appName) noexcept
 	: App::CD3D12App(width, height, className, appName)
@@ -14,11 +17,23 @@ CTestApp::CTestApp(UINT width, UINT height, const wchar_t* className, const wcha
 void CTestApp::OnInit() 
 {
 	CD3D12App::OnInit();
-
+	DescriptorHelper::InitializeDescriptorHelper(m_device.Get());
+	
+	m_queueContext = make_unique<CQueueContext>(
+		nullptr,
+		m_device.Get(),
+		D3D12_COMMAND_QUEUE_FLAG_NONE,
+		D3D12_COMMAND_LIST_TYPE_DIRECT
+	);
 	m_commandContext = make_unique<CCommandContext>(m_device.Get(), D3D12_COMMAND_LIST_TYPE_DIRECT, nullptr);
-	m_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence));
-	m_fenceValue = 1;
-	m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+	m_swapchainContext = make_unique<CSwapchainContext>(
+		m_device.Get(), 
+		m_factory.Get(), 
+		m_queueContext->Get(),
+		2, m_width, m_height, 
+		DXGI_FORMAT_R8G8B8A8_UNORM, 
+		m_windowHandle
+	);
 }
 
 inline void CTestApp::OnUpdate(float dt) 
@@ -26,33 +41,27 @@ inline void CTestApp::OnUpdate(float dt)
 	m_commandContext->StartRecord(nullptr);
 
 	static FLOAT clearColor[4] = { 0.f, 0.f, 0.f, 1.f };
-	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_backBufferRTVHeap->GetCPUDescriptorHandleForHeapStart());
-	rtvHandle.Offset(m_frameIndex, m_rtvDescriptorSize);
 
-	ID3D12GraphicsCommandList* cmdList = m_commandContext->GetCommandList();
+	ID3D12GraphicsCommandList* commandList = m_commandContext->GetCommandList();
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_swapchainContext->GetCurrentBackBufferRTVHandle();
 
-	CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_backBufferRTVResources[m_frameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-	cmdList->ResourceBarrier(1, &barrier);
-	cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 
-	barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_backBufferRTVResources[m_frameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-	cmdList->ResourceBarrier(1, &barrier);
+	D3D12_RESOURCE_BARRIER backBufferToRTVBarrier =  m_swapchainContext->CreateTransitionToRenderTargetBarrier();
+	commandList->ResourceBarrier(1, &backBufferToRTVBarrier);
+	commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+
+	D3D12_RESOURCE_BARRIER backBufferToPresentBarrier = m_swapchainContext->CreateTransitionToPresentBarrier();
+	commandList->ResourceBarrier(1, &backBufferToPresentBarrier);
 	m_commandContext->FinishRecord();
 
-	ID3D12CommandList* commandLists[] = { cmdList };
-	m_mainCommandQueue->ExecuteCommandLists(1, commandLists);
+	CCommandContext* commandContexts[] = { m_commandContext.get() };
+	m_queueContext->ExecuteCommandLists(1, commandContexts);
 
-	ThrowIfHResultFailed(m_swapChain->Present(1, 0));
+	m_swapchainContext->Present(1, 0);
 
-	ThrowIfHResultFailed(m_mainCommandQueue->Signal(m_fence.Get(), m_fenceValue));
+	m_queueContext->WaitForGpuSync();
 
-	if (m_fence->GetCompletedValue() < m_fenceValue) {
-		ThrowIfHResultFailed(m_fence->SetEventOnCompletion(m_fenceValue, m_fenceEvent));
-		WaitForSingleObject(m_fenceEvent, INFINITE);
-	}
-	m_fenceValue++;
-
-	m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
+	m_swapchainContext->UpdateContext();
 	clearColor[0] += (1.f * dt);
 }
 

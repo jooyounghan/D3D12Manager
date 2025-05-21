@@ -3,9 +3,10 @@
 
 namespace Command
 {
+	class CCommandContext;
 	class CQueueContext;
 
-	typedef void(__stdcall* GpuCompleteHandler)(CQueueContext* queueContext);
+	typedef void(* GpuCompleteHandler)(CQueueContext* queueContext);
 
 	class D3D12MANAGER_API SINGLE_THREAD_ONLY CQueueContext
 	{
@@ -25,6 +26,9 @@ namespace Command
 		ID3D12CommandQueue* m_commandQueue = nullptr;
 		ID3D12Fence* m_fence = nullptr;
 
+	public:
+		inline ID3D12CommandQueue* Get() const noexcept { return m_commandQueue; }
+
 	protected:
 		HANDLE m_fenceEvent = NULL;
 		
@@ -34,8 +38,7 @@ namespace Command
 
 	public:
 		void OnGpuCompleted();
-
-	public:
+		void ExecuteCommandLists(UINT numCommandContext, CCommandContext* const* ppCommandContext);
 		void WaitForGpuSync();
 		void WaitForGpuAsync();
 	};

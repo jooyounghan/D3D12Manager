@@ -7,7 +7,6 @@ using namespace App;
 using namespace Microsoft::WRL;
 
 CD3D12App* CD3D12App::GApp = nullptr;
-HWND CD3D12App::GWindowHandle = nullptr;
 
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -41,14 +40,14 @@ CD3D12App::CD3D12App(
 		m_width, m_height, nullptr,
 		nullptr, m_windowClass.hInstance, nullptr
 	);
-	GWindowHandle = hWindow;
+    m_windowHandle = hWindow;
 }
 
 int CD3D12App::Run()
 {
 	OnInit();
 
-	ShowWindow(GWindowHandle, SW_SHOWDEFAULT);
+	ShowWindow(m_windowHandle, SW_SHOWDEFAULT);
 
 	MSG msg = {};
 	while (msg.message != WM_QUIT)
@@ -61,9 +60,10 @@ int CD3D12App::Run()
 		}
         else
         {
-            SystemTime::StopClock();
-            OnUpdate(SystemTime::GetMeasuredTime());
             SystemTime::StartClock();
+            OnUpdate(m_deltaTime);
+            m_deltaTime = SystemTime::GetMeasuredTime();
+            SystemTime::StopClock();
         }
 	}
 
@@ -84,66 +84,16 @@ void CD3D12App::OnInit()
         }
     #endif
 
-    ComPtr<IDXGIFactory4> factory;
-    ThrowIfHResultFailed(CreateDXGIFactory1(IID_PPV_ARGS(&factory)));
-
-    ComPtr<IDXGIAdapter1> hardwareAdapter;
-    GetHardwareAdapter(factory.Get(), &hardwareAdapter);
+    ThrowIfHResultFailed(CreateDXGIFactory1(IID_PPV_ARGS(&m_factory)));
+    GetHardwareAdapter(m_factory.Get(), &m_hardwareAdapter);
 
     ThrowIfHResultFailed(D3D12CreateDevice(
-        hardwareAdapter.Get(),
+        m_hardwareAdapter.Get(),
         D3D_FEATURE_LEVEL_11_0,
         IID_PPV_ARGS(&m_device)
     ));
 
-    DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-    swapChainDesc.BufferCount = FrameCount;
-    swapChainDesc.BufferDesc.Width = m_width;
-    swapChainDesc.BufferDesc.Height = m_height;
-    swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-    swapChainDesc.OutputWindow = GWindowHandle;
-    swapChainDesc.SampleDesc.Count = 1;
-    swapChainDesc.Windowed = TRUE;
-
-    OnCreateCommandQueue();
-
-    ComPtr<IDXGISwapChain> swapChain;
-    ThrowIfHResultFailed(factory->CreateSwapChain(
-        m_mainCommandQueue.Get(),
-        &swapChainDesc,
-        &swapChain
-    ));
-    ThrowIfHResultFailed(swapChain.As(&m_swapChain));
-    m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
-
-    D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-    rtvHeapDesc.NumDescriptors = FrameCount;
-    rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-    rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    ThrowIfHResultFailed(m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_backBufferRTVHeap)));
-
-    m_rtvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_backBufferRTVHeap->GetCPUDescriptorHandleForHeapStart());
-    for (UINT n = 0; n < FrameCount; n++)
-    {
-        ThrowIfHResultFailed(m_swapChain->GetBuffer(n, IID_PPV_ARGS(&m_backBufferRTVResources[n])));
-        m_device->CreateRenderTargetView(m_backBufferRTVResources[n].Get(), nullptr, rtvHandle);
-        rtvHandle.Offset(1, m_rtvDescriptorSize);
-    }
-
     SystemTime::Initialize();
-}
-
-void CD3D12App::OnCreateCommandQueue()
-{
-    D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-    queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-    queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-
-    ThrowIfHResultFailed(m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_mainCommandQueue)));
 }
 
 LRESULT __stdcall CD3D12App::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -153,7 +103,7 @@ LRESULT __stdcall CD3D12App::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
 		case WM_SIZE:
 		{
 			RECT Rect;
-			if (GetClientRect(GWindowHandle, &Rect))
+			if (GetClientRect(m_windowHandle, &Rect))
 			{
 				m_width = Rect.right - Rect.left;
 				m_height = Rect.bottom - Rect.top;
@@ -170,7 +120,8 @@ LRESULT __stdcall CD3D12App::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
 	return ::DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
-// From DirectX12 Example https://github.com/microsoft/DirectX-Graphics-Samples
+// ==============================================================================================
+// From DirectX12 Example https://github.com/microsoft/DirectX-Graphics-Samples 
 void CD3D12App::GetHardwareAdapter(
 	IDXGIFactory1* pFactory, 
 	IDXGIAdapter1** ppAdapter, 
@@ -236,3 +187,4 @@ void CD3D12App::GetHardwareAdapter(
 
     *ppAdapter = adapter.Detach();
 }
+// ===============================================================================================

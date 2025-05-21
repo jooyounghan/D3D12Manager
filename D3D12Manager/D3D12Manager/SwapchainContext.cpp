@@ -89,3 +89,10 @@ void CSwapchainContext::Present(UINT syncInterval, UINT flags)
 	ThrowIfHResultFailed(m_swapChain->Present(syncInterval, flags));
 }
 
+D3D12_CPU_DESCRIPTOR_HANDLE CSwapchainContext::GetCurrentBackBufferRTVHandle()
+{
+	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_backBufferRTVHeap->GetCPUDescriptorHandleForHeapStart());
+	rtvHandle.Offset(m_frameIndex, DescriptorHelper::RTVHeapIncrementSize);
+	return rtvHandle;
+}
+

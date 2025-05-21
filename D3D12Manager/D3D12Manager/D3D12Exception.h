@@ -4,14 +4,16 @@
 enum class ED3D12ExceptionCode
 {
 // Command ===========================================
-	EXC_COM_LIST_NOT_RECORDABLE
+	EXC_COMMAND_LIST_INVALID_RECORD_STATE,
+	EXC_COMMAND_LIST_EXECUTE_COUNT_TOO_LARGE,
 // ===================================================
 };
 
 static const char* GExceptionMessages[] = 
 {
 // Command ===========================================
-	"Command List is Not in Recordable State",
+	"The CommandList is currently in a invalid record state",
+	"ExecuteCommandLists NumCommandLists is too large",
 // ===================================================
 };
 

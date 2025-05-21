@@ -1,4 +1,5 @@
 #include "QueueContext.h"
+#include "CommandContext.h"
 #include "D3D12AppHelper.h"
 #include "Win32Exception.h"
 
@@ -34,7 +35,6 @@ CQueueContext::CQueueContext(
 	m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 	ThrowIfWinResultFailed(reinterpret_cast<size_t>(m_fenceEvent), 0, ECompareMethod::GREATER);
 }
-
 CQueueContext::~CQueueContext()
 {
 	m_commandQueue->Release();
@@ -79,6 +79,23 @@ void CQueueContext::WaitForGpuAsync()
 
 void CQueueContext::OnGpuCompleted()
 {
-	m_gpuCompleteHandler(this);
+	if (m_gpuCompleteHandler) m_gpuCompleteHandler(this);
 	m_expectedFenceValue++;
+}
+
+void CQueueContext::ExecuteCommandLists(
+	UINT numCommandContext, 
+	CCommandContext* const* ppCommandContext
+)
+{
+	constexpr UINT maxCommandContextCount = 256;
+	ID3D12CommandList* commandLists[maxCommandContextCount];
+
+	ThrowIfD3D12Failed(numCommandContext < maxCommandContextCount, ED3D12ExceptionCode::EXC_COMMAND_LIST_EXECUTE_COUNT_TOO_LARGE);
+
+	for (UINT idx = 0; idx < numCommandContext; ++idx)
+	{
+		commandLists[idx] = ppCommandContext[idx]->GetCommandList(false);
+	}
+	m_commandQueue->ExecuteCommandLists(numCommandContext, commandLists);
 }

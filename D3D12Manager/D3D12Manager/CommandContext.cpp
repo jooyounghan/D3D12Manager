@@ -15,7 +15,7 @@ CCommandContext::CCommandContext(
 {
 	ThrowIfHResultFailed(device->CreateCommandAllocator(commandType, IID_PPV_ARGS(&m_commandAllocator)));
 	ThrowIfHResultFailed(device->CreateCommandList(gpuNodeMask, commandType, m_commandAllocator, pipelineState, IID_PPV_ARGS(&m_commandList)));
-	m_commandList->Close();
+	FinishRecord();
 }
 
 CCommandContext::~CCommandContext()
@@ -37,8 +37,8 @@ void CCommandContext::FinishRecord()
 	m_isRecordable = false;
 }
 
-ID3D12GraphicsCommandList* CCommandContext::GetCommandList() const
+ID3D12GraphicsCommandList* CCommandContext::GetCommandList(bool expectedRecordState /*= true*/) const
 {
-	ThrowIfD3D12Failed(!m_isRecordable, ED3D12ExceptionCode::EXC_COM_LIST_NOT_RECORDABLE);
+	ThrowIfD3D12Failed(m_isRecordable == expectedRecordState, ED3D12ExceptionCode::EXC_COMMAND_LIST_INVALID_RECORD_STATE);
 	return m_commandList;
 }

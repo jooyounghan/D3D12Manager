@@ -18,30 +18,25 @@ namespace App
     public:
         static CD3D12App* GApp;
 
-
     protected:
         UINT m_width = 0;
         UINT m_height = 0;
         float m_aspectRatio = 0.f;
         WNDCLASSEX m_windowClass;
+        HWND m_windowHandle;
 
     protected:
-        static const UINT FrameCount = 2;
+        float m_deltaTime = 0.f;
 
     protected:
         Microsoft::WRL::ComPtr<ID3D12Device> m_device;
-        Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_mainCommandQueue;
-        Microsoft::WRL::ComPtr<IDXGISwapChain3> m_swapChain;
-        UINT m_frameIndex;
-
-    protected:
-        Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_backBufferRTVHeap;
-        Microsoft::WRL::ComPtr<ID3D12Resource> m_backBufferRTVResources[FrameCount];
-        UINT m_rtvDescriptorSize;
+		Microsoft::WRL::ComPtr<IDXGIFactory4> m_factory;
+		Microsoft::WRL::ComPtr<IDXGIAdapter1> m_hardwareAdapter;
 
     public:
         inline UINT GetWidth() const noexcept { return m_width; }
         inline UINT GetHeight() const noexcept { return m_height; }
+        inline ID3D12Device* GetDevice() const { return m_device.Get(); }
 
     public:
         int Run();
@@ -52,12 +47,8 @@ namespace App
         virtual void OnDestroy() = 0;
         virtual void OnSize(UINT width, UINT height) = 0;
 
-    protected:
-        virtual void OnCreateCommandQueue();
-
     public:
         LRESULT WINAPI AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-        static HWND GWindowHandle;
 
     protected:
         void GetHardwareAdapter(
