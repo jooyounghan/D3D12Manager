@@ -1,12 +1,12 @@
 #pragma once
 #include "D3D12DllHelper.h"
 
-namespace Graphics
+namespace Utilities
 {
 	class D3D12MANAGER_API DescriptorHelper
 	{
 	public:
-		static void InitializeDescriptorHelper(ID3D12Device* device);
+		static void InitDescriptorHelper(ID3D12Device* device);
 
 	public:
 		static UINT RTVHeapIncrementSize;

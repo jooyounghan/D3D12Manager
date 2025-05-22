@@ -145,6 +145,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AGraphicsPass.cpp" />
+    <ClCompile Include="AGraphicsStage.cpp" />
+    <ClCompile Include="AGraphicsStageGroup.cpp" />
     <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ARotatable.cpp" />
     <ClCompile Include="BaseCamera.cpp" />
@@ -156,6 +159,8 @@
     <ClCompile Include="DescriptorHelper.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="HResultException.cpp" />
+    <ClCompile Include="MultiThreadingHelper.cpp" />
+    <ClCompile Include="PassTaskManager.cpp" />
     <ClCompile Include="QueueContext.cpp" />
     <ClCompile Include="SwapchainContext.cpp" />
     <ClCompile Include="SystemTime.cpp" />
@@ -163,6 +168,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AD3D12Exception.h" />
+    <ClInclude Include="AGraphicsPass.h" />
+    <ClInclude Include="AGraphicsStage.h" />
+    <ClInclude Include="AGraphicsStageGroup.h" />
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ARotatable.h" />
     <ClInclude Include="BaseCamera.h" />
@@ -178,6 +186,8 @@
     <ClInclude Include="DescriptorHelper.h" />
     <ClInclude Include="HResultException.h" />
     <ClInclude Include="IObject.h" />
+    <ClInclude Include="MultiThreadingHelper.h" />
+    <ClInclude Include="PassTaskManager.h" />
     <ClInclude Include="QueueContext.h" />
     <ClInclude Include="SwapchainContext.h" />
     <ClInclude Include="SystemTime.h" />

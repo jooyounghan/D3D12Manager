@@ -48,7 +48,7 @@ inline void ThrowIfWinResultFailed(size_t result, size_t refResult, ECompareMeth
     if (!isOk) throw Exception::CWin32Exception();
 }
 
-inline void ThrowIfD3D12Failed(BOOL result, ED3D12ExceptionCode exceptionCode)
+inline void ThrowIfD3D12Failed(BOOL result, Exception::ED3D12ExceptionCode exceptionCode)
 {
 	if (result == FALSE) throw Exception::CD3D12Exception(exceptionCode);
 }

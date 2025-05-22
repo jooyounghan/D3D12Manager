@@ -7,6 +7,7 @@ using namespace std;
 using namespace App;
 using namespace Command;
 using namespace Graphics;
+using namespace Utilities;
 
 CTestApp::CTestApp(UINT width, UINT height, const wchar_t* className, const wchar_t* appName) noexcept
 	: App::CD3D12App(width, height, className, appName)
@@ -17,7 +18,7 @@ CTestApp::CTestApp(UINT width, UINT height, const wchar_t* className, const wcha
 void CTestApp::OnInit() 
 {
 	CD3D12App::OnInit();
-	DescriptorHelper::InitializeDescriptorHelper(m_device.Get());
+	DescriptorHelper::InitDescriptorHelper(m_device.Get());
 	
 	m_queueContext = make_unique<CQueueContext>(
 		[&](CQueueContext*) {m_swapchainContext->UpdateContext(); },
@@ -40,6 +41,7 @@ inline void CTestApp::OnUpdate(float dt)
 {
 	m_commandContext->StartRecord(nullptr);
 
+
 	static FLOAT clearColor[4] = { 0.f, 0.f, 0.f, 1.f };
 
 	ID3D12GraphicsCommandList* commandList = m_commandContext->GetCommandList();
@@ -52,6 +54,8 @@ inline void CTestApp::OnUpdate(float dt)
 
 	D3D12_RESOURCE_BARRIER backBufferToPresentBarrier = m_swapchainContext->CreateTransitionToPresentBarrier();
 	commandList->ResourceBarrier(1, &backBufferToPresentBarrier);
+
+
 	m_commandContext->FinishRecord();
 
 	CCommandContext* commandContexts[] = { m_commandContext.get() };

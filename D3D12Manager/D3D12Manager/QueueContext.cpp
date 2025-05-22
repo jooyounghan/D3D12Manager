@@ -1,7 +1,6 @@
 #include "QueueContext.h"
 #include "CommandContext.h"
 #include "D3D12AppHelper.h"
-#include "Win32Exception.h"
 
 using namespace std;
 using namespace Command;
@@ -66,10 +65,10 @@ void CQueueContext::ExecuteCommandLists(
 	CCommandContext* const* ppCommandContext
 )
 {
-	constexpr UINT maxCommandContextCount = 256;
-	ID3D12CommandList* commandLists[maxCommandContextCount];
+	constexpr UINT MaxCommandContextCount = 256;
+	ID3D12CommandList* commandLists[MaxCommandContextCount];
 
-	ThrowIfD3D12Failed(numCommandContext < maxCommandContextCount, ED3D12ExceptionCode::EXC_COMMAND_LIST_EXECUTE_COUNT_TOO_LARGE);
+	ThrowIfD3D12Failed(numCommandContext < MaxCommandContextCount, ED3D12ExceptionCode::EXC_COMMAND_LIST_EXECUTE_COUNT_TOO_LARGE);
 
 	for (UINT idx = 0; idx < numCommandContext; ++idx)
 	{

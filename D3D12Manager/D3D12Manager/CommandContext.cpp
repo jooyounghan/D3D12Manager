@@ -1,6 +1,5 @@
 #include "CommandContext.h"
 #include "D3D12AppHelper.h"
-#include "D3D12Exception.h"
 
 using namespace Command;
 using namespace Exception;

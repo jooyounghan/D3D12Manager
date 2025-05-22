@@ -1,33 +1,42 @@
 #pragma once
 #include "D3D12DllHelper.h"
+#include "CommandContext.h"
 
 namespace Command
 {
+	constexpr UINT MaxCommandContextCount = 1024;
+
 	class D3D12MANAGER_API CCommandContextPool
 	{
 	public:
-		CCommandContextPool(
-			ID3D12Device* device, 
-			D3D12_COMMAND_LIST_TYPE type, 
-			UINT maxCount
-		);
+		static void InitCommandContextPool(ID3D12Device* device);
+		static CCommandContextPool& GetInstance(D3D12_COMMAND_LIST_TYPE type) noexcept;
+
+	private:
+		static CCommandContextPool DirectCommandContextPool;
+		static CCommandContextPool CopyCommandContextPool;
+		static CCommandContextPool ComputeCommandContextPool;
+
+	private:
+		CCommandContextPool() = default;
 		~CCommandContextPool();
+		CCommandContextPool(const CCommandContextPool&) = delete;
+		CCommandContextPool& operator=(const CCommandContextPool&) = delete;
 
 	public:
-		CCommandContextPool* RequestCommandContext();
-		void DiscardCommandContext();
+		CCommandContext* Request();
+		void Discard(CCommandContext* commandContext);
 
 	private:
-		CRITICAL_SECTION m_lock;
-
+		volatile LONG m_head = 0;
+		volatile LONG m_tail = 0;
+	
 	private:
-		UINT m_maxCount;
-		UINT m_currentIndex;
-
-	private:
-		ID3D12Device* m_device;
-		D3D12_COMMAND_LIST_TYPE m_type;
-		CCommandContextPool** m_commandContextPool;
+		struct 
+		{
+			volatile LONG status = 0;
+			CCommandContext* commandContext = nullptr;
+		} m_commandContextSlots[MaxCommandContextCount];
 	};
 }
 
