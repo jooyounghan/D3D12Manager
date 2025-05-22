@@ -147,9 +147,10 @@
   <ItemGroup>
     <ClCompile Include="AGraphicsPass.cpp" />
     <ClCompile Include="AGraphicsStage.cpp" />
-    <ClCompile Include="AGraphicsStageGroup.cpp" />
+    <ClCompile Include="AGraphicsPhase.cpp" />
     <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ARotatable.cpp" />
+    <ClCompile Include="AScalable.cpp" />
     <ClCompile Include="BaseCamera.cpp" />
     <ClCompile Include="CommandContext.cpp" />
     <ClCompile Include="CommandContextPool.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="AGraphicsStageGroup.h" />
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ARotatable.h" />
+    <ClInclude Include="AScalable.h" />
     <ClInclude Include="BaseCamera.h" />
     <ClInclude Include="CommandContext.h" />
     <ClInclude Include="CommandContextPool.h" />

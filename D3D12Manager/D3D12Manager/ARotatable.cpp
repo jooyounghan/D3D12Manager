@@ -1,7 +1,7 @@
 #include "ARotatable.h"
 
 using namespace DirectX;
-
+using namespace Object;
 
 XMVECTOR ARotatable::GetAngle() const noexcept 
 { 

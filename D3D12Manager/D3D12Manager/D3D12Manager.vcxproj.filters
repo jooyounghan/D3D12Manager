@@ -120,7 +120,7 @@
     <ClCompile Include="AGraphicsStage.cpp">
       <Filter>소스 파일\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="AGraphicsStageGroup.cpp">
+    <ClCompile Include="AGraphicsPhase.cpp">
       <Filter>소스 파일\Stage</Filter>
     </ClCompile>
     <ClCompile Include="CommandContextPool.cpp">
@@ -128,6 +128,9 @@
     </ClCompile>
     <ClCompile Include="PassTaskManager.cpp">
       <Filter>소스 파일\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="AScalable.cpp">
+      <Filter>소스 파일\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="PassTaskManager.h">
       <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="AScalable.h">
+      <Filter>헤더 파일\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
