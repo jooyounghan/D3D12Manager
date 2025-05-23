@@ -17,6 +17,7 @@ namespace D3D12
 #define SINGLE_THREAD_ONLY [[maybe_unused]] 
 
 struct D3D12MANAGER_API DirectX::XMFLOAT3;
+struct D3D12MANAGER_API DirectX::XMMATRIX;
 
 template class D3D12MANAGER_API Microsoft::WRL::ComPtr<ID3D12Device>;
 template class D3D12MANAGER_API Microsoft::WRL::ComPtr<ID3D12CommandQueue>;

@@ -10,7 +10,7 @@ namespace Stage
 {
 	class AGraphicsPass;
 
-	constexpr UINT MaxWorkerThread = 16;
+	constexpr UINT MaxWorkerThread = 8;
 	constexpr UINT MaxTaskQueueSize = 1024;
 	constexpr UINT StealSpinCount = 10;
 

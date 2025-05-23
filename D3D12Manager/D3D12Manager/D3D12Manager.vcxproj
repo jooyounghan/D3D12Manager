@@ -148,9 +148,7 @@
     <ClCompile Include="AGraphicsPass.cpp" />
     <ClCompile Include="AGraphicsStage.cpp" />
     <ClCompile Include="AGraphicsGraph.cpp" />
-    <ClCompile Include="AMovable.cpp" />
-    <ClCompile Include="ARotatable.cpp" />
-    <ClCompile Include="AScalable.cpp" />
+    <ClCompile Include="AObject.cpp" />
     <ClCompile Include="BaseCamera.cpp" />
     <ClCompile Include="CommandContext.cpp" />
     <ClCompile Include="CommandContextPool.cpp" />
@@ -161,6 +159,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="HResultException.cpp" />
     <ClCompile Include="MultiThreadingHelper.cpp" />
+    <ClCompile Include="ObjectHelper.cpp" />
     <ClCompile Include="PassTaskManager.cpp" />
     <ClCompile Include="QueueContext.cpp" />
     <ClCompile Include="SwapchainContext.cpp" />
@@ -172,9 +171,6 @@
     <ClInclude Include="AGraphicsPass.h" />
     <ClInclude Include="AGraphicsStage.h" />
     <ClInclude Include="AGraphicsGraph.h" />
-    <ClInclude Include="AMovable.h" />
-    <ClInclude Include="ARotatable.h" />
-    <ClInclude Include="AScalable.h" />
     <ClInclude Include="BaseCamera.h" />
     <ClInclude Include="CommandContext.h" />
     <ClInclude Include="CommandContextPool.h" />
@@ -187,8 +183,9 @@
     <ClInclude Include="D3D12Exception.h" />
     <ClInclude Include="DescriptorHelper.h" />
     <ClInclude Include="HResultException.h" />
-    <ClInclude Include="IObject.h" />
+    <ClInclude Include="AObject.h" />
     <ClInclude Include="MultiThreadingHelper.h" />
+    <ClInclude Include="ObjectHelper.h" />
     <ClInclude Include="PassTaskManager.h" />
     <ClInclude Include="QueueContext.h" />
     <ClInclude Include="SwapchainContext.h" />

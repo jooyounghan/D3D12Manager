@@ -78,12 +78,6 @@
     <ClCompile Include="BaseCamera.cpp">
       <Filter>소스 파일\Object\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="AMovable.cpp">
-      <Filter>소스 파일\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="ARotatable.cpp">
-      <Filter>소스 파일\Object</Filter>
-    </ClCompile>
     <ClCompile Include="SystemTime.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -129,8 +123,11 @@
     <ClCompile Include="PassTaskManager.cpp">
       <Filter>소스 파일\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="AScalable.cpp">
+    <ClCompile Include="AObject.cpp">
       <Filter>소스 파일\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectHelper.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,19 +140,13 @@
     <ClInclude Include="BaseCamera.h">
       <Filter>헤더 파일\Object\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="IObject.h">
+    <ClInclude Include="AObject.h">
       <Filter>헤더 파일\Object</Filter>
     </ClInclude>
     <ClInclude Include="AControlable.h">
       <Filter>헤더 파일\Object</Filter>
     </ClInclude>
     <ClInclude Include="AController.h">
-      <Filter>헤더 파일\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="AMovable.h">
-      <Filter>헤더 파일\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="ARotatable.h">
       <Filter>헤더 파일\Object</Filter>
     </ClInclude>
     <ClInclude Include="D3D12AppHelper.h">
@@ -209,8 +200,8 @@
     <ClInclude Include="PassTaskManager.h">
       <Filter>헤더 파일\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="AScalable.h">
-      <Filter>헤더 파일\Object</Filter>
+    <ClInclude Include="ObjectHelper.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
