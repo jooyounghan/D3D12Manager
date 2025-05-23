@@ -60,6 +60,24 @@ void AObject::SetTransformDirty()
 	}
 }
 
+void Object::AObject::UpdateTransform()
+{
+	XMVECTOR position = XMLoadFloat3(&m_position);
+	XMVECTOR radian = XMLoadFloat3(&m_radian);
+	XMVECTOR scale = XMLoadFloat3(&m_scale);
+
+	m_localTransformation = XMMatrixAffineTransformation(
+		scale,
+		XMQuaternionIdentity(),
+		XMQuaternionRotationRollPitchYawFromVector(radian),
+		position
+	);
+
+	m_worldTransformation = m_parentObject ?
+		m_parentObject->m_worldTransformation * m_localTransformation :
+		m_localTransformation;
+}
+
 void AObject::PropagateDirty()
 {
 	for (UINT idx = 0; idx < m_childrenObjectCount; ++idx)
@@ -93,18 +111,8 @@ void AObject::Update(float dt)
 {
 	if (m_isTransformDirty)
 	{
-		XMVECTOR position = XMLoadFloat3(&m_position);
-		XMVECTOR radian = XMLoadFloat3(&m_radian);
-		XMVECTOR scale = XMLoadFloat3(&m_scale);
-
-		//m_localTransformation = XMMatrixAffineTransformation(
-		//	scale,
-		//	XMQuaternionIdentity(),
-		//	XMQuaternionRotationRollPitchYawFromVector(radian),
-		//	position
-		//);
-
-		//m_isTransformDirty = false;
+		UpdateTransform();
+		m_isTransformDirty = false;
 	}
 
 }

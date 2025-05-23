@@ -1,7 +1,7 @@
 #pragma once
 #include "D3D12DllHelper.h"
 
-namespace Utilities
+namespace Resources
 {
 	class D3D12MANAGER_API DescriptorHelper
 	{

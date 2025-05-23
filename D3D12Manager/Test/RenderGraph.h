@@ -2,6 +2,8 @@
 #include "AGraphicsGraph.h"
 #include "SwapchainContext.h"
 
+#include <memory>
+
 namespace Stage
 {
 	class RenderStage;

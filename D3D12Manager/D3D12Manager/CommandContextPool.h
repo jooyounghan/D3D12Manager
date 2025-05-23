@@ -2,7 +2,7 @@
 #include "D3D12DllHelper.h"
 #include "CommandContext.h"
 
-namespace Command
+namespace Resources
 {
 	constexpr UINT MaxCommandContextCount = 1024;
 
@@ -13,9 +13,9 @@ namespace Command
 		static CCommandContextPool& GetInstance(D3D12_COMMAND_LIST_TYPE type) noexcept;
 
 	private:
-		static CCommandContextPool DirectCommandContextPool;
-		static CCommandContextPool CopyCommandContextPool;
-		static CCommandContextPool ComputeCommandContextPool;
+		static CCommandContextPool GDirectCommandContextPool;
+		static CCommandContextPool GCopyCommandContextPool;
+		static CCommandContextPool GComputeCommandContextPool;
 
 	private:
 		CCommandContextPool() = default;
@@ -24,8 +24,8 @@ namespace Command
 		CCommandContextPool& operator=(const CCommandContextPool&) = delete;
 
 	public:
-		CCommandContext* Request();
-		void Discard(CCommandContext* commandContext);
+		Command::CCommandContext* Request();
+		void Discard(Command::CCommandContext* commandContext);
 
 	private:
 		volatile LONG m_head = 0;
@@ -35,7 +35,7 @@ namespace Command
 		struct 
 		{
 			volatile LONG status = 0;
-			CCommandContext* commandContext = nullptr;
+			Command::CCommandContext* commandContext = nullptr;
 		} m_commandContextSlots[MaxCommandContextCount];
 	};
 }

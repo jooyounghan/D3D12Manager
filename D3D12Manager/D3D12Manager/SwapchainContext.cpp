@@ -4,7 +4,7 @@
 #include "d3dx12.h"
 
 using namespace Graphics;
-using namespace Utilities;
+using namespace Resources;
 
 CSwapchainContext::CSwapchainContext(
 	ID3D12Device* device, 

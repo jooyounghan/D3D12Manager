@@ -14,13 +14,19 @@ namespace Exception
 	// ===================================================
 
 	// Pass ==============================================
-		EXC_PREREQUISTE_PASS_COUNT_TOO_LARGE,
+		EXC_STAGE_PREREQUISTE_PASS_TOO_MANY,
 		EXC_STAGE_ADD_PASS_DEPTH_TOO_LARGE,
 		EXC_STAGE_ADD_PASS_WIDTH_TOO_LARGE,
 	// ===================================================
 
 	// Object ============================================
-		EXC_OBJECT_CHILDREN_TOO_MANY
+		EXC_OBJECT_CHILDREN_TOO_MANY,
+	// ===================================================
+
+	// Resource ==========================================
+		RSC_TRANSFORM_INDEX_OVERBOOKED,
+		RSC_TRANSFORM_INDEX_SPURIOUS_RETURN,
+		RSC_TRANSFORM_WEIRD_INDEX,
 	// ===================================================
 	};
 
@@ -29,21 +35,25 @@ namespace Exception
 	// Command ===========================================
 		"The CommandList is currently in a invalid record state",
 		"ExecuteCommandLists CommandLists count too large",
-		"Command Context Pool overbooked",
-		"Command Context Pool Spurious return",
-		"Command Graph has too many stage",
+		"Command context pool overbooked",
+		"Command context pool spurious return",
+		"Command graph has too many stage",
 	// ===================================================
 
 	// Pass ==============================================
-		"Prerequisite pass count is too large",
-		"Stage Depth is too Large",
-		"Stage Width is too Large",
+		"Stage pass has too many prerequisite pass",
+		"Stage depth is too large",
+		"Stage width is too large",
 	// ===================================================
 
 	// Object ============================================
 		"Object has too many children",
-		"Stage Depth is too Large",
-		"Stage Width is too Large",
+	// ===================================================
+
+	// Resource ==========================================
+		"TransformManager overbooked",
+		"TransformManager spurious return",
+		"TransformManager update weird index",
 	// ===================================================
 
 	};

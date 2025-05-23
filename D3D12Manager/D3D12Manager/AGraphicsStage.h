@@ -4,6 +4,10 @@
 namespace Command
 {
 	class CQueueContext;
+}
+
+namespace Resources
+{
 	class CCommandContextPool;
 }
 
@@ -33,7 +37,7 @@ namespace Stage
 	public:
 		void InitStage();
 		void ExecuteStage(
-			Command::CCommandContextPool* commandContextPool, 
+			Resources::CCommandContextPool* commandContextPool, 
 			Command::CQueueContext* queueContext
 		);
 

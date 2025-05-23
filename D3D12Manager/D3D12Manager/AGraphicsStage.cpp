@@ -5,6 +5,7 @@
 #include "PassTaskManager.h"
 
 using namespace Command;
+using namespace Resources;
 using namespace Exception;
 
 Stage::AGraphicsStage::AGraphicsStage(AGraphicsStage* prerequisiteStages /*= nullptr */)

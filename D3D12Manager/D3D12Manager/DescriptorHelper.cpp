@@ -1,6 +1,6 @@
 #include "DescriptorHelper.h"
 
-using namespace Utilities;
+using namespace Resources;
 
 UINT DescriptorHelper::RTVHeapIncrementSize;
 

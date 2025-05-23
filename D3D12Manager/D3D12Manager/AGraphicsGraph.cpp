@@ -4,6 +4,7 @@
 
 using namespace Stage;
 using namespace Command;
+using namespace Resources;
 using namespace Exception;
 
 AGraphicsGraph::AGraphicsGraph(

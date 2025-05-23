@@ -61,11 +61,14 @@
     <Filter Include="헤더 파일\Stage">
       <UniqueIdentifier>{71c84d17-9f5d-4d16-a2a9-c3bb1cb9d4a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Command\Pool">
-      <UniqueIdentifier>{6c47e035-b5a7-40b5-bc20-c0557061d45b}</UniqueIdentifier>
+    <Filter Include="헤더 파일\Object\Controller">
+      <UniqueIdentifier>{1f5b6d51-cdcb-4a30-a779-ead778fd3d60}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Command\Pool">
-      <UniqueIdentifier>{35676246-3d35-4ead-a1cd-de1a7a1314cb}</UniqueIdentifier>
+    <Filter Include="헤더 파일\Resources">
+      <UniqueIdentifier>{857a7d50-5a58-4ecd-b539-9620389a49e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Resources">
+      <UniqueIdentifier>{205a642d-94e0-455e-8320-82c239dffbd3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -105,9 +108,6 @@
     <ClCompile Include="AGraphicsPass.cpp">
       <Filter>소스 파일\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="DescriptorHelper.cpp">
-      <Filter>소스 파일\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="MultiThreadingHelper.cpp">
       <Filter>소스 파일\Utilities</Filter>
     </ClCompile>
@@ -117,17 +117,26 @@
     <ClCompile Include="AGraphicsGraph.cpp">
       <Filter>소스 파일\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="CommandContextPool.cpp">
-      <Filter>소스 파일\Command\Pool</Filter>
-    </ClCompile>
     <ClCompile Include="PassTaskManager.cpp">
       <Filter>소스 파일\Stage</Filter>
     </ClCompile>
     <ClCompile Include="AObject.cpp">
       <Filter>소스 파일\Object</Filter>
     </ClCompile>
+    <ClCompile Include="SceneObject.cpp">
+      <Filter>소스 파일\Object</Filter>
+    </ClCompile>
     <ClCompile Include="ObjectHelper.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformManager.cpp">
+      <Filter>소스 파일\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorHelper.cpp">
+      <Filter>소스 파일\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandContextPool.cpp">
+      <Filter>소스 파일\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -141,12 +150,6 @@
       <Filter>헤더 파일\Object\Camera</Filter>
     </ClInclude>
     <ClInclude Include="AObject.h">
-      <Filter>헤더 파일\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="AControlable.h">
-      <Filter>헤더 파일\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="AController.h">
       <Filter>헤더 파일\Object</Filter>
     </ClInclude>
     <ClInclude Include="D3D12AppHelper.h">
@@ -182,9 +185,6 @@
     <ClInclude Include="AGraphicsPass.h">
       <Filter>헤더 파일\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="DescriptorHelper.h">
-      <Filter>헤더 파일\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="MultiThreadingHelper.h">
       <Filter>헤더 파일\Utilities</Filter>
     </ClInclude>
@@ -194,14 +194,29 @@
     <ClInclude Include="AGraphicsGraph.h">
       <Filter>헤더 파일\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="CommandContextPool.h">
-      <Filter>헤더 파일\Command\Pool</Filter>
-    </ClInclude>
     <ClInclude Include="PassTaskManager.h">
       <Filter>헤더 파일\Stage</Filter>
     </ClInclude>
+    <ClInclude Include="SceneObject.h">
+      <Filter>헤더 파일\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="AController.h">
+      <Filter>헤더 파일\Object\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="AControlable.h">
+      <Filter>헤더 파일\Object\Controller</Filter>
+    </ClInclude>
     <ClInclude Include="ObjectHelper.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformManager.h">
+      <Filter>헤더 파일\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorHelper.h">
+      <Filter>헤더 파일\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandContextPool.h">
+      <Filter>헤더 파일\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

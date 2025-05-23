@@ -42,7 +42,8 @@ namespace Object
 	public:
 		void SetTransformDirty();
 
-	private:
+	protected:
+		virtual void UpdateTransform();
 		void PropagateDirty();
 
 	protected:
@@ -62,6 +63,8 @@ namespace Object
 
 	public:
 		void Update(float dt);
+
+	protected:
 		virtual void UpdateImpl() = 0;
 	};
 }

@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -162,8 +162,10 @@
     <ClCompile Include="ObjectHelper.cpp" />
     <ClCompile Include="PassTaskManager.cpp" />
     <ClCompile Include="QueueContext.cpp" />
+    <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="SwapchainContext.cpp" />
     <ClCompile Include="SystemTime.cpp" />
+    <ClCompile Include="TransformManager.cpp" />
     <ClCompile Include="Win32Exception.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -188,8 +190,10 @@
     <ClInclude Include="ObjectHelper.h" />
     <ClInclude Include="PassTaskManager.h" />
     <ClInclude Include="QueueContext.h" />
+    <ClInclude Include="SceneObject.h" />
     <ClInclude Include="SwapchainContext.h" />
     <ClInclude Include="SystemTime.h" />
+    <ClInclude Include="TransformManager.h" />
     <ClInclude Include="Win32Exception.h" />
   </ItemGroup>
   <ItemGroup>

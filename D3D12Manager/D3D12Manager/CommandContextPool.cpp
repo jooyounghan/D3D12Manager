@@ -2,29 +2,30 @@
 #include "D3D12AppHelper.h"
 #include "CriticalSectionLock.h"
 
+using namespace Resources;
 using namespace Command;
 using namespace Utilities;
 using namespace Exception;
 
-CCommandContextPool CCommandContextPool::DirectCommandContextPool;
-CCommandContextPool CCommandContextPool::CopyCommandContextPool;
-CCommandContextPool CCommandContextPool::ComputeCommandContextPool;
+CCommandContextPool CCommandContextPool::GDirectCommandContextPool;
+CCommandContextPool CCommandContextPool::GCopyCommandContextPool;
+CCommandContextPool CCommandContextPool::GComputeCommandContextPool;
 
 
 void CCommandContextPool::InitCommandContextPool(ID3D12Device* device)
 {
 	for (UINT idx = 0; idx < MaxCommandContextCount; ++idx)
 	{
-		DirectCommandContextPool.m_commandContextSlots[idx].commandContext = new CCommandContext(device, D3D12_COMMAND_LIST_TYPE_DIRECT, nullptr);
-		CopyCommandContextPool.m_commandContextSlots[idx].commandContext = new CCommandContext(device, D3D12_COMMAND_LIST_TYPE_COPY, nullptr);
-		ComputeCommandContextPool.m_commandContextSlots[idx].commandContext = new CCommandContext(device, D3D12_COMMAND_LIST_TYPE_COMPUTE, nullptr);
+		GDirectCommandContextPool.m_commandContextSlots[idx].commandContext = new CCommandContext(device, D3D12_COMMAND_LIST_TYPE_DIRECT, nullptr);
+		GCopyCommandContextPool.m_commandContextSlots[idx].commandContext = new CCommandContext(device, D3D12_COMMAND_LIST_TYPE_COPY, nullptr);
+		GComputeCommandContextPool.m_commandContextSlots[idx].commandContext = new CCommandContext(device, D3D12_COMMAND_LIST_TYPE_COMPUTE, nullptr);
 	}
 }
 
 CCommandContextPool& CCommandContextPool::GetInstance(D3D12_COMMAND_LIST_TYPE type) noexcept
 {
-	return type == D3D12_COMMAND_LIST_TYPE_DIRECT ? DirectCommandContextPool :
-		type == D3D12_COMMAND_LIST_TYPE_COPY ? CopyCommandContextPool : ComputeCommandContextPool;
+	return type == D3D12_COMMAND_LIST_TYPE_DIRECT ? GDirectCommandContextPool :
+		type == D3D12_COMMAND_LIST_TYPE_COPY ? GCopyCommandContextPool : GComputeCommandContextPool;
 }
 
 
