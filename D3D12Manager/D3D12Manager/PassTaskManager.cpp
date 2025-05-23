@@ -18,15 +18,14 @@ PassTaskManager::PassTaskManager()
 		m_workers[idx].head = 0;
 		m_workers[idx].tail = 0;
 		m_workers[idx].workerId = idx;
-		HANDLE thread = CreateThread(nullptr, 0, WorkerProc, &m_workers[idx], 0, nullptr);
-		ThrowIfWinResultFailed(reinterpret_cast<size_t>(thread), 0, ECompareMethod::NOT_EQUAL);
-		m_workers[idx].thread = thread;
+		m_workers[idx].thread = CreateThread(nullptr, 0, WorkerProc, &m_workers[idx], 0, nullptr);
+		ThrowIfWinResultFailed(reinterpret_cast<size_t>(m_workers[idx].thread), 0, ECompareMethod::NOT_EQUAL);
 	}
 }
 
 PassTaskManager::~PassTaskManager()
 {
-	m_shutdowned = TRUE;
+	InterlockedExchange(&m_shutdowned, TRUE);
 
 	for (UINT idx = 0; idx < MaxWorkerThread; ++idx)
 	{
@@ -37,10 +36,10 @@ PassTaskManager::~PassTaskManager()
 
 void PassTaskManager::Submit(AGraphicsPass* pass, CCommandContext* commandContext)
 {
-	static volatile LONG submitCounter = 0;
-	int index = InterlockedIncrement(&submitCounter) % MaxWorkerThread;
+	static __declspec(thread) int localCounter = 0;
+	int index = (localCounter++) % MaxWorkerThread;
 
-	PushTask(&m_workers[index], { pass, commandContext });
+	PushTask(&m_workers[index], { FALSE, pass, commandContext });
 }
 
 void PassTaskManager::PushTask(Worker* worker, Task task)
@@ -50,14 +49,17 @@ void PassTaskManager::PushTask(Worker* worker, Task task)
 		LONG head = worker->head;
 		LONG tail = worker->tail;
 		LONG count = head - tail;
-		if (count > MaxTaskQueueSize) continue;
-
-		if (InterlockedCompareExchange(&worker->head, head + 1, head) == head) 
+		if (count < MaxTaskQueueSize)
 		{
-			LONG index = head % MaxTaskQueueSize;
-			worker->queue[index] = task;
-			break;
+			if (InterlockedCompareExchange(&worker->head, head + 1, head) == head) 
+			{
+				Task& pushedTask = worker->queue[head % MaxTaskQueueSize];
+				pushedTask = task;
+				InterlockedExchange(&pushedTask.taskReady, 1);
+				break;
+			}
 		}
+		YieldProcessor();
 	}
 }
 
@@ -68,35 +70,52 @@ bool PassTaskManager::PopTask(Worker* worker, Task* out)
 		LONG head = worker->head;
 		LONG tail = worker->tail;
 		LONG count = head - tail;
+
 		if (tail >= head) return false;
+
 		if (InterlockedCompareExchange(&worker->tail, tail + 1, tail) == tail)
 		{
-			LONG index = tail % MaxTaskQueueSize;
-			*out = worker->queue[index];
+			Task& poppedTask = worker->queue[tail % MaxTaskQueueSize];
+
+			while (InterlockedCompareExchange(&poppedTask.taskReady, 1, 1) == 0) 
+			{
+				YieldProcessor();
+			}
+
+			*out = poppedTask;
 			return true;
 		}
+
+		YieldProcessor();
 	}
 }
 
 bool PassTaskManager::StealTask(int thiefIndex, Task* out)
 {
 	PassTaskManager& passTaskManager = GetInstance();
-	for (UINT idx = 0; idx < MaxWorkerThread; ++idx)
+	for (UINT victimIndex = 0; victimIndex < MaxWorkerThread; ++victimIndex)
 	{
-		if (thiefIndex == idx) continue;
-		Worker* victim = &passTaskManager.m_workers[idx];
+		if (thiefIndex != victimIndex) continue;
+		Worker* victim = &passTaskManager.m_workers[victimIndex];
 
 		for (UINT spinCount = 0; spinCount < StealSpinCount; ++spinCount)
 		{
 			LONG head = victim->head;
 			LONG tail = victim->tail;
 			if (tail >= head) break;
+
 			if (InterlockedCompareExchange(&victim->tail, tail + 1, tail) == tail)
 			{
-				LONG index = tail % MaxTaskQueueSize;
-				*out = victim->queue[index];
+				Task& stolenTask = victim->queue[tail % MaxTaskQueueSize];
+
+				while (InterlockedCompareExchange(&stolenTask.taskReady, 1, 1) == 0)
+				{
+					YieldProcessor();
+				}
+				*out = stolenTask;
 				return true;
 			}
+			YieldProcessor();
 		}
 	}
 	return false;
@@ -108,7 +127,7 @@ DWORD WINAPI PassTaskManager::WorkerProc(LPVOID param)
 	Worker* self = (Worker*)param;
 	Task task;
 
-	while (!passTaskManager.m_shutdowned)
+	while (!InterlockedCompareExchange(&passTaskManager.m_shutdowned, FALSE, FALSE))
 	{
 		if (PopTask(self, &task) || StealTask(self->workerId, &task)) 
 		{
@@ -117,6 +136,7 @@ DWORD WINAPI PassTaskManager::WorkerProc(LPVOID param)
 
 			if (pass) pass->ExecutePass(commandContext);
 		}
+		YieldProcessor();
 	}
 
 	return 0;

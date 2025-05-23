@@ -1,15 +1,8 @@
 #pragma once
 #include "D3D12App.h"
-#include "QueueContext.h"
-#include "CommandContext.h"
-#include "SwapchainContext.h"
-
+#include "RenderGraph.h"
 #include <memory>
 
-namespace Command
-{
-    class CCommandContext;
-}
 
 class CTestApp : public App::CD3D12App
 {
@@ -27,9 +20,7 @@ protected:
     virtual void OnDestroy() override;
 
 protected:
-    std::unique_ptr<Command::CQueueContext> m_queueContext;
-    std::unique_ptr<Command::CCommandContext> m_commandContext;
-    std::unique_ptr<Graphics::CSwapchainContext> m_swapchainContext;
+    std::unique_ptr<Stage::RenderGraph> m_renderGraph;
 
 protected:
     virtual void OnSize(UINT width, UINT height) override {};

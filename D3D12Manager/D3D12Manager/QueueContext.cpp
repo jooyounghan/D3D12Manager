@@ -6,25 +6,14 @@ using namespace std;
 using namespace Command;
 using namespace Exception;
 
-void CALLBACK FenceCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired) 
-{
-	CQueueContext* queueContext = static_cast<CQueueContext*>(lpParameter);
-	if (queueContext)
-	{
-		queueContext->OnGpuCompleted();
-	}
-}
-
 CQueueContext::CQueueContext(
-	function<void(CQueueContext*)> gpuCompleteHandler,
 	ID3D12Device* device, 
-	D3D12_COMMAND_QUEUE_FLAGS commandQueueFlag,
 	D3D12_COMMAND_LIST_TYPE commandType, 
+	D3D12_COMMAND_QUEUE_FLAGS commandQueueFlag/* = D3D12_COMMAND_QUEUE_FLAG_NONE*/,
 	UINT64 initialFenceValue /*= NULL */,
 	D3D12_FENCE_FLAGS Flags /*= D3D12_FENCE_FLAG_NONE*/
 )
 	: m_commandType(commandType),
-	m_gpuCompleteHandler(gpuCompleteHandler),
 	m_expectedFenceValue(initialFenceValue + 1)
 {
 	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
@@ -51,12 +40,6 @@ void CQueueContext::WaitForGpuSync()
 		ThrowIfWinResultFailed(WaitForSingleObject(m_fenceEvent, INFINITE), 0xFFFFFFFF, ECompareMethod::NOT_EQUAL);
 	}
 
-	OnGpuCompleted();
-}
-
-void CQueueContext::OnGpuCompleted()
-{
-	m_gpuCompleteHandler(this);
 	m_expectedFenceValue++;
 }
 

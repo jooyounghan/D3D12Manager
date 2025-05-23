@@ -13,6 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\Stage">
+      <UniqueIdentifier>{a6e607cc-da47-415f-ba87-a4d5efce9f71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Stage">
+      <UniqueIdentifier>{0e1b286e-ef2c-4939-b0fa-6d5da6b5c596}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Stage\Pass">
+      <UniqueIdentifier>{be05a50b-d5d8-4524-83e1-617e3a240591}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Stage\Pass">
+      <UniqueIdentifier>{2ad09cd8-f47e-4565-af89-ace2f4bb1c28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Stage\Stage">
+      <UniqueIdentifier>{ee57e7c0-c72e-4f95-8a3a-c90507a7643d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Stage\Stage">
+      <UniqueIdentifier>{19813834-223d-4d5b-bfe6-58d66783c309}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Stage\Graph">
+      <UniqueIdentifier>{05013f47-1902-4128-9cf8-29ccb1f7e7a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Stage\Graph">
+      <UniqueIdentifier>{07b84c69-daaf-4d2d-b104-516e5d924e77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -21,10 +45,34 @@
     <ClCompile Include="TestApp.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="ClearPass.cpp">
+      <Filter>소스 파일\Stage\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderStage.cpp">
+      <Filter>소스 파일\Stage\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="PresentPass.cpp">
+      <Filter>소스 파일\Stage\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderGraph.cpp">
+      <Filter>소스 파일\Stage\Graph</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestApp.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="PresentPass.h">
+      <Filter>헤더 파일\Stage\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="ClearPass.h">
+      <Filter>헤더 파일\Stage\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStage.h">
+      <Filter>헤더 파일\Stage\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderGraph.h">
+      <Filter>헤더 파일\Stage\Graph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,7 @@ namespace Exception
 		EXC_COMMAND_LIST_EXECUTE_COUNT_TOO_LARGE,
 		EXC_COMMAND_CONTEXT_POOL_OVERBOOKED,
 		EXC_COMMAND_CONTEXT_POOL_SPURIOUS_RETURN,
+		EXC_COMMAND_GRAPH_STAGE_TOO_MANY,
 	// ===================================================
 
 	// Pass ==============================================
@@ -26,7 +27,8 @@ namespace Exception
 		"ExecuteCommandLists CommandLists count too large",
 		"Command Context Pool overbooked",
 		"Command Context Pool Spurious return",
-	// ===================================================
+		"Command Graph has too many stage",
+		// ===================================================
 
 	// Pass ==============================================
 		"Prerequisite pass count is too large",

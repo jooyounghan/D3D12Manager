@@ -6,16 +6,14 @@ namespace Command
 {
 	class CCommandContext;
 	class CQueueContext;
-	template class D3D12MANAGER_API std::function<void(CQueueContext*)>;
 
 	class D3D12MANAGER_API SINGLE_THREAD_ONLY CQueueContext
 	{
 	public:
 		CQueueContext(
-			std::function<void(CQueueContext*)> gpuCompleteHandler,
 			ID3D12Device* device,
-			D3D12_COMMAND_QUEUE_FLAGS commandQueueFlag,
 			D3D12_COMMAND_LIST_TYPE commandType,
+			D3D12_COMMAND_QUEUE_FLAGS commandQueueFlag = D3D12_COMMAND_QUEUE_FLAG_NONE,
 			UINT64 initialFenceValue = NULL,
             D3D12_FENCE_FLAGS Flags = D3D12_FENCE_FLAG_NONE
 		);
@@ -33,7 +31,6 @@ namespace Command
 		HANDLE m_fenceEvent = NULL;
 		
 	protected:
-		std::function<void(CQueueContext*)> m_gpuCompleteHandler = [](CQueueContext*) {};
 		UINT64 m_expectedFenceValue;
 
 	protected:
@@ -43,7 +40,6 @@ namespace Command
 		UINT64 ReadFenceValue();
 
 	public:
-		void OnGpuCompleted();
 		void ExecuteCommandLists(UINT numCommandContext, CCommandContext* const* ppCommandContext);
 		void WaitForGpuSync();
 	};

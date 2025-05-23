@@ -120,7 +120,7 @@
     <ClCompile Include="AGraphicsStage.cpp">
       <Filter>소스 파일\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="AGraphicsPhase.cpp">
+    <ClCompile Include="AGraphicsGraph.cpp">
       <Filter>소스 파일\Stage</Filter>
     </ClCompile>
     <ClCompile Include="CommandContextPool.cpp">
@@ -200,7 +200,7 @@
     <ClInclude Include="AGraphicsStage.h">
       <Filter>헤더 파일\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="AGraphicsStageGroup.h">
+    <ClInclude Include="AGraphicsGraph.h">
       <Filter>헤더 파일\Stage</Filter>
     </ClInclude>
     <ClInclude Include="CommandContextPool.h">

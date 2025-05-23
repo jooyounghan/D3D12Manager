@@ -24,7 +24,7 @@ namespace Command
 		void FinishRecord();
 
 	protected:
-		bool m_isRecordable = false;
+		volatile bool m_isRecordable = false;
 
 	public:
 		inline D3D12_COMMAND_LIST_TYPE GetCommandType() const noexcept { return m_commandType; }

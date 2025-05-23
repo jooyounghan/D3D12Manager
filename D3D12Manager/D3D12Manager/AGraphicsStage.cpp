@@ -30,16 +30,16 @@ void Stage::AGraphicsStage::AddPass(UINT numPasses, AGraphicsPass* const* graphi
 
 void Stage::AGraphicsStage::InitStage()
 {
-	ThrowIfWinResultFailed(ResetEvent(m_stageCompleteEvent), 0, ECompareMethod::NOT_EQUAL);
+	ThrowIfWinResultFailed(ResetEvent(m_stageCompleteEvent), NULL, ECompareMethod::NOT_EQUAL);
 }
 
 void Stage::AGraphicsStage::ExecuteStage(CCommandContextPool* commandContextPool, CQueueContext* queueContext)
 {
 	PassTaskManager& passTaskManager = PassTaskManager::GetInstance();
 
-	if (m_prerequisiteEvent)
-	{
-		ThrowIfWinResultFailed(WaitForSingleObject(m_prerequisiteEvent, INFINITE), 0xFFFFFFFF, ECompareMethod::NOT_EQUAL);	}
+	if (m_prerequisiteEvent) ThrowIfWinResultFailed(WaitForSingleObject(m_prerequisiteEvent, INFINITE), 0xFFFFFFFF, ECompareMethod::NOT_EQUAL);
+
+	OnStageStarted();
 
 	for (UINT depthIdx = 0; depthIdx < m_depthCount; ++depthIdx)
 	{
@@ -50,14 +50,18 @@ void Stage::AGraphicsStage::ExecuteStage(CCommandContextPool* commandContextPool
 		for (UINT widthIdx = 0; widthIdx < widthCount; ++widthIdx)
 		{
 			AGraphicsPass* graphicsPass = m_graphicsPasses[depthIdx][widthIdx];
-			passCompletedEvents[widthIdx] = graphicsPass->GetCompleteEvent();
+			graphicsPass->InitPass();
 
+			passCompletedEvents[widthIdx] = graphicsPass->GetCompleteEvent();
 			CCommandContext* commandContext = commandContextPool->Request();
 			commandContexts[widthIdx] = commandContext;
 			
 			passTaskManager.Submit(graphicsPass, commandContext);
 		}
-		ThrowIfWinResultFailed(WaitForMultipleObjects(widthCount, passCompletedEvents, TRUE, INFINITE), 0xFFFFFFFF, ECompareMethod::NOT_EQUAL);
+
+		DWORD result = WaitForMultipleObjects(widthCount, passCompletedEvents, TRUE, 10000);
+		ThrowIfWinResultFailed(result, 0xFFFFFFFF, ECompareMethod::NOT_EQUAL);
+		ThrowIfWinResultFailed(result, 0x00000102L, ECompareMethod::NOT_EQUAL);
 		queueContext->ExecuteCommandLists(widthCount, commandContexts);
 		
 		for (UINT widthIdx = 0; widthIdx < widthCount; ++widthIdx)
@@ -65,5 +69,8 @@ void Stage::AGraphicsStage::ExecuteStage(CCommandContextPool* commandContextPool
 			commandContextPool->Discard(commandContexts[widthIdx]);
 		}		
 	}
+
+	OnStageFinished();
+
 	ThrowIfWinResultFailed(SetEvent(m_stageCompleteEvent), 0, ECompareMethod::NOT_EQUAL);
 }

@@ -138,10 +138,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClearPass.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PresentPass.cpp" />
+    <ClCompile Include="RenderGraph.cpp" />
+    <ClCompile Include="RenderStage.cpp" />
     <ClCompile Include="TestApp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClearPass.h" />
+    <ClInclude Include="PresentPass.h" />
+    <ClInclude Include="RenderGraph.h" />
+    <ClInclude Include="RenderStage.h" />
     <ClInclude Include="TestApp.h" />
   </ItemGroup>
   <ItemGroup>

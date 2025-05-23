@@ -23,9 +23,6 @@ namespace Stage
 		HANDLE m_stageCompleteEvent = NULL;
 
 	protected:
-		D3D12_COMMAND_LIST_TYPE m_type;
-
-	protected:
 		AGraphicsPass* m_graphicsPasses[MaxStageDepth][MaxPassWidth]{ nullptr };
 		UINT m_widthCounts[MaxStageDepth]{ 0 };
 		UINT m_depthCount = 0;
@@ -39,6 +36,10 @@ namespace Stage
 			Command::CCommandContextPool* commandContextPool, 
 			Command::CQueueContext* queueContext
 		);
+
+	protected:
+		virtual void OnStageStarted() = 0;
+		virtual void OnStageFinished() = 0;
 	};
 }
 

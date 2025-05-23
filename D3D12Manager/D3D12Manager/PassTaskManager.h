@@ -6,7 +6,6 @@ namespace Command
 	class CCommandContext;
 }
 
-
 namespace Stage
 {
 	class AGraphicsPass;
@@ -29,10 +28,11 @@ namespace Stage
 	private:
 		struct Task
 		{
+			volatile LONG taskReady;
 			AGraphicsPass* pass;
 			Command::CCommandContext* commandContext;
 		};
-		struct Worker
+		struct alignas(64) Worker
 		{
 			HANDLE thread;
 			Task queue[MaxTaskQueueSize];
@@ -52,6 +52,6 @@ namespace Stage
 		
 	private:
 		Worker m_workers[MaxWorkerThread];
-		volatile BOOL m_shutdowned = FALSE;
+		volatile LONG m_shutdowned = FALSE;
 	};
 }

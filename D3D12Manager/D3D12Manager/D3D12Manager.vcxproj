@@ -147,7 +147,7 @@
   <ItemGroup>
     <ClCompile Include="AGraphicsPass.cpp" />
     <ClCompile Include="AGraphicsStage.cpp" />
-    <ClCompile Include="AGraphicsPhase.cpp" />
+    <ClCompile Include="AGraphicsGraph.cpp" />
     <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ARotatable.cpp" />
     <ClCompile Include="AScalable.cpp" />
@@ -171,7 +171,7 @@
     <ClInclude Include="AD3D12Exception.h" />
     <ClInclude Include="AGraphicsPass.h" />
     <ClInclude Include="AGraphicsStage.h" />
-    <ClInclude Include="AGraphicsStageGroup.h" />
+    <ClInclude Include="AGraphicsGraph.h" />
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ARotatable.h" />
     <ClInclude Include="AScalable.h" />
