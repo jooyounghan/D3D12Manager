@@ -54,7 +54,9 @@ void Stage::AGraphicsStage::ExecuteStage(CCommandContextPool* commandContextPool
 			graphicsPass->InitPass();
 
 			passCompletedEvents[widthIdx] = graphicsPass->GetCompleteEvent();
-			CCommandContext* commandContext = commandContextPool->Request();
+			CCommandContext* commandContext;
+			
+			ThrowIfD3D12Failed(commandContextPool->Pop(&commandContext), ED3D12ExceptionCode::EXC_COMMAND_CONTEXT_POOL_OVER_REQUEST);
 			commandContexts[widthIdx] = commandContext;
 			
 			passTaskManager.Submit(graphicsPass, commandContext);
@@ -67,7 +69,7 @@ void Stage::AGraphicsStage::ExecuteStage(CCommandContextPool* commandContextPool
 		
 		for (UINT widthIdx = 0; widthIdx < widthCount; ++widthIdx)
 		{
-			commandContextPool->Discard(commandContexts[widthIdx]);
+			ThrowIfD3D12Failed(commandContextPool->Push(commandContexts[widthIdx]), ED3D12ExceptionCode::EXC_COMMAND_CONTEXT_POOL_SPURIOUS_DISCARD);
 		}		
 	}
 

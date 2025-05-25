@@ -1,7 +1,6 @@
 #pragma once
 #include "D3D12DllHelper.h"
 
-
 namespace Resources
 {   
     constexpr UINT MaxObjectCount = 1000000;

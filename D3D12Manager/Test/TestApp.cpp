@@ -6,6 +6,7 @@ using namespace std;
 using namespace App;
 using namespace Stage;
 using namespace Command;
+using namespace Resources; 
 using namespace Utilities;
 
 CTestApp::CTestApp(UINT width, UINT height, const wchar_t* className, const wchar_t* appName) noexcept

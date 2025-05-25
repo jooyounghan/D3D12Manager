@@ -8,8 +8,8 @@ namespace Exception
 	// Command ===========================================
 		EXC_COMMAND_LIST_INVALID_RECORD_STATE,
 		EXC_COMMAND_LIST_EXECUTE_COUNT_TOO_LARGE,
-		EXC_COMMAND_CONTEXT_POOL_OVERBOOKED,
-		EXC_COMMAND_CONTEXT_POOL_SPURIOUS_RETURN,
+		EXC_COMMAND_CONTEXT_POOL_OVER_REQUEST,
+		EXC_COMMAND_CONTEXT_POOL_SPURIOUS_DISCARD,
 		EXC_COMMAND_GRAPH_STAGE_TOO_MANY,
 	// ===================================================
 
@@ -35,8 +35,8 @@ namespace Exception
 	// Command ===========================================
 		"The CommandList is currently in a invalid record state",
 		"ExecuteCommandLists CommandLists count too large",
-		"Command context pool overbooked",
-		"Command context pool spurious return",
+		"Command context pool over requested",
+		"Command context pool spurious discard",
 		"Command graph has too many stage",
 	// ===================================================
 

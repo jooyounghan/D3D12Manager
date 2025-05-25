@@ -1,5 +1,6 @@
 #pragma once
 #include "D3D12DllHelper.h"
+#include "LockfreeRingBuffer.h"
 
 namespace Command
 {
@@ -28,16 +29,13 @@ namespace Stage
 	private:
 		struct Task
 		{
-			volatile LONG taskReady;
 			AGraphicsPass* pass;
 			Command::CCommandContext* commandContext;
 		};
-		struct alignas(64) Worker
+
+		struct alignas(64) Worker : Utilities::LockfreeRingBuffer<Task, MaxTaskQueueSize>
 		{
 			HANDLE thread;
-			Task queue[MaxTaskQueueSize];
-			volatile LONG head;
-			volatile LONG tail;
 			DWORD workerId;
 		};
 
@@ -46,8 +44,6 @@ namespace Stage
 
 	private:
 		static DWORD WINAPI WorkerProc(LPVOID param);
-		static void PushTask(Worker* worker, Task task);
-		static bool PopTask(Worker* worker, Task* out);
 		static bool StealTask(int thiefIndex, Task* out);
 		
 	private:

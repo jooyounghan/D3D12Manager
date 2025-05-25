@@ -1,8 +1,8 @@
 #include "PassTaskManager.h"
-#include "D3D12AppHelper.h"
 #include "AGraphicsPass.h"
 
 using namespace Command;
+using namespace Utilities;
 using namespace Stage;
 
 PassTaskManager& PassTaskManager::GetInstance()
@@ -15,8 +15,6 @@ PassTaskManager::PassTaskManager()
 {
 	for (UINT idx = 0; idx < MaxWorkerThread; ++idx)
 	{
-		m_workers[idx].head = 0;
-		m_workers[idx].tail = 0;
 		m_workers[idx].workerId = idx;
 		m_workers[idx].thread = CreateThread(nullptr, 0, WorkerProc, &m_workers[idx], 0, nullptr);
 		ThrowIfWinResultFailed(reinterpret_cast<size_t>(m_workers[idx].thread), 0, ECompareMethod::NOT_EQUAL);
@@ -39,55 +37,7 @@ void PassTaskManager::Submit(AGraphicsPass* pass, CCommandContext* commandContex
 	static __declspec(thread) int localCounter = 0;
 	int index = (localCounter++) % MaxWorkerThread;
 
-	PushTask(&m_workers[index], { FALSE, pass, commandContext });
-}
-
-void PassTaskManager::PushTask(Worker* worker, Task task)
-{
-	while (true)
-	{
-		LONG head = worker->head;
-		LONG tail = worker->tail;
-		LONG count = head - tail;
-		if (count < MaxTaskQueueSize)
-		{
-			if (InterlockedCompareExchange(&worker->head, head + 1, head) == head) 
-			{
-				Task& pushedTask = worker->queue[head % MaxTaskQueueSize];
-				pushedTask = task;
-				InterlockedExchange(&pushedTask.taskReady, 1);
-				break;
-			}
-		}
-		YieldProcessor();
-	}
-}
-
-bool PassTaskManager::PopTask(Worker* worker, Task* out)
-{
-	while (true)
-	{
-		LONG head = worker->head;
-		LONG tail = worker->tail;
-		LONG count = head - tail;
-
-		if (tail >= head) return false;
-
-		if (InterlockedCompareExchange(&worker->tail, tail + 1, tail) == tail)
-		{
-			Task& poppedTask = worker->queue[tail % MaxTaskQueueSize];
-
-			while (InterlockedCompareExchange(&poppedTask.taskReady, 1, 1) == 0) 
-			{
-				YieldProcessor();
-			}
-
-			*out = poppedTask;
-			return true;
-		}
-
-		YieldProcessor();
-	}
+	m_workers[index].Push({ pass, commandContext });
 }
 
 bool PassTaskManager::StealTask(int thiefIndex, Task* out)
@@ -97,26 +47,7 @@ bool PassTaskManager::StealTask(int thiefIndex, Task* out)
 	{
 		if (thiefIndex != victimIndex) continue;
 		Worker* victim = &passTaskManager.m_workers[victimIndex];
-
-		for (UINT spinCount = 0; spinCount < StealSpinCount; ++spinCount)
-		{
-			LONG head = victim->head;
-			LONG tail = victim->tail;
-			if (tail >= head) break;
-
-			if (InterlockedCompareExchange(&victim->tail, tail + 1, tail) == tail)
-			{
-				Task& stolenTask = victim->queue[tail % MaxTaskQueueSize];
-
-				while (InterlockedCompareExchange(&stolenTask.taskReady, 1, 1) == 0)
-				{
-					YieldProcessor();
-				}
-				*out = stolenTask;
-				return true;
-			}
-			YieldProcessor();
-		}
+		if (victim->TryNPop(StealSpinCount, out)) return true;
 	}
 	return false;
 }
@@ -129,7 +60,7 @@ DWORD WINAPI PassTaskManager::WorkerProc(LPVOID param)
 
 	while (!InterlockedCompareExchange(&passTaskManager.m_shutdowned, FALSE, FALSE))
 	{
-		if (PopTask(self, &task) || StealTask(self->workerId, &task)) 
+		if (self->Pop(&task) || StealTask(self->workerId, &task))
 		{
 			AGraphicsPass* pass = task.pass;
 			CCommandContext* commandContext = task.commandContext;

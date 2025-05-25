@@ -138,6 +138,15 @@
     <ClCompile Include="CommandContextPool.cpp">
       <Filter>소스 파일\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>소스 파일\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="GpuResourceHandle.cpp">
+      <Filter>소스 파일\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="LockfreeRingBuffer.cpp">
+      <Filter>소스 파일\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3D12DllHelper.h">
@@ -217,6 +226,15 @@
     </ClInclude>
     <ClInclude Include="CommandContextPool.h">
       <Filter>헤더 파일\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>헤더 파일\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="GpuResourceHandle.h">
+      <Filter>헤더 파일\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="LockfreeRingBuffer.h">
+      <Filter>헤더 파일\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
