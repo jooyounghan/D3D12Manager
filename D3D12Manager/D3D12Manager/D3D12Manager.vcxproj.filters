@@ -70,6 +70,9 @@
     <Filter Include="소스 파일\Resources">
       <UniqueIdentifier>{205a642d-94e0-455e-8320-82c239dffbd3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Utilities\Lock-Free">
+      <UniqueIdentifier>{53ad100a-255b-4545-81cc-cdc5f6a46267}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -144,8 +147,8 @@
     <ClCompile Include="GpuResourceHandle.cpp">
       <Filter>소스 파일\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="LockfreeRingBuffer.cpp">
-      <Filter>소스 파일\Utilities</Filter>
+    <ClCompile Include="ResourceHandle.cpp">
+      <Filter>소스 파일\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,8 +236,14 @@
     <ClInclude Include="GpuResourceHandle.h">
       <Filter>헤더 파일\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceHandle.h">
+      <Filter>헤더 파일\Resources</Filter>
+    </ClInclude>
     <ClInclude Include="LockfreeRingBuffer.h">
-      <Filter>헤더 파일\Utilities</Filter>
+      <Filter>헤더 파일\Utilities\Lock-Free</Filter>
+    </ClInclude>
+    <ClInclude Include="LockfreeArray.h">
+      <Filter>헤더 파일\Utilities\Lock-Free</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

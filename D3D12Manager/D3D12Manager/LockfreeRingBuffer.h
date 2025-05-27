@@ -43,7 +43,7 @@ namespace Utilities
 				LONG index = head % Capacity;
 				Slot& slot = m_ringBuffer[index];
 				slot.data = item;
-				InterlockedCompareExchange(&slot.status, 0, 1);
+				InterlockedCompareExchange(&slot.status, 1, 0);
 				return true;
 			}
 			YieldProcessor();

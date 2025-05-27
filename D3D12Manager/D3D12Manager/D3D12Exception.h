@@ -24,9 +24,8 @@ namespace Exception
 	// ===================================================
 
 	// Resource ==========================================
-		RSC_TRANSFORM_INDEX_OVERBOOKED,
-		RSC_TRANSFORM_INDEX_SPURIOUS_RETURN,
-		RSC_TRANSFORM_WEIRD_INDEX,
+		RSC_TRANSFORMATION_POOL_OVER_REQUEST,
+		RSC_TRANSFORMATION_POOL_SPURIOUS_DISCARD,
 	// ===================================================
 	};
 
@@ -51,9 +50,8 @@ namespace Exception
 	// ===================================================
 
 	// Resource ==========================================
-		"TransformManager overbooked",
-		"TransformManager spurious return",
-		"TransformManager update weird index",
+		"Transformation pool over requested",
+		"Transformation pool spurious discard",
 	// ===================================================
 
 	};

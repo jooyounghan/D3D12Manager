@@ -2,17 +2,21 @@
 #include "D3D12AppHelper.h"
 #include "d3dx12.h"
 
+#include <vector>
+#include <algorithm>
+
+using namespace std;
 using namespace DirectX;
 using namespace Resources;
 using namespace Exception;
 
-TransformManager TransformManager::GTransformManager;
+TransformationPool TransformationPool::GTransformationPool;
 
-void TransformManager::InitTransformManager(ID3D12Device* device)
+void TransformationPool::InitTransformationPool(ID3D12Device* device)
 {
     for (UINT idx = 0; idx < MaxObjectCount; ++idx)
     {
-        GTransformManager.m_indices[idx] = idx;
+        GTransformationPool.m_indexQueue.Push(idx);
     }
 
     D3D12_RESOURCE_DESC desc = {};
@@ -36,7 +40,7 @@ void TransformManager::InitTransformManager(ID3D12Device* device)
         &desc,
         D3D12_RESOURCE_STATE_COPY_DEST,
         nullptr,
-        IID_PPV_ARGS(&GTransformManager.m_defaultBuffer)
+        IID_PPV_ARGS(&GTransformationPool.m_defaultBuffer)
     ));
 
     ThrowIfHResultFailed(device->CreateCommittedResource(
@@ -45,13 +49,13 @@ void TransformManager::InitTransformManager(ID3D12Device* device)
         &desc,
         D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
-        IID_PPV_ARGS(&GTransformManager.m_uploadBuffer)
+        IID_PPV_ARGS(&GTransformationPool.m_uploadBuffer)
     ));
 
-    GTransformManager.m_gpuAddress = GTransformManager.m_defaultBuffer->GetGPUVirtualAddress();
+    GTransformationPool.m_gpuAddress = GTransformationPool.m_defaultBuffer->GetGPUVirtualAddress();
 }
 
-TransformManager::~TransformManager()
+TransformationPool::~TransformationPool()
 {
     if (m_uploadBuffer) 
     {
@@ -65,92 +69,84 @@ TransformManager::~TransformManager()
     }
 }
 
-UINT TransformManager::RequestIndex()
+UINT TransformationPool::RequestIndex()
 {
-    ThrowIfD3D12Failed(m_issueHead > m_issueTail, ED3D12ExceptionCode::RSC_TRANSFORM_INDEX_OVERBOOKED);
-
-    UINT issuedIndex = m_indices[m_issueTail % MaxObjectCount];
-    m_issueTail++;
-    return issuedIndex;
+    UINT result;
+    ThrowIfD3D12Failed(m_indexQueue.Pop(&result), ED3D12ExceptionCode::RSC_TRANSFORMATION_POOL_OVER_REQUEST);
+    return result;
 }
 
-void TransformManager::DiscardIndex(UINT index)
+void TransformationPool::DiscardIndex(UINT index)
 {
-    ThrowIfD3D12Failed(m_issueHead - m_issueTail <= MaxObjectCount, ED3D12ExceptionCode::RSC_TRANSFORM_INDEX_SPURIOUS_RETURN);
-
-    m_indices[m_issueHead % MaxObjectCount] = index;
-    m_issueHead++;
+    ThrowIfD3D12Failed(m_indexQueue.Push(index), ED3D12ExceptionCode::RSC_TRANSFORMATION_POOL_SPURIOUS_DISCARD);
 }
 
-void TransformManager::UpdateTransform(UINT index, const XMMATRIX& matrix)
+void TransformationPool::UpdateTransform(UINT index, const XMMATRIX& matrix)
 {
-    ThrowIfD3D12Failed(index < MaxObjectCount, ED3D12ExceptionCode::RSC_TRANSFORM_WEIRD_INDEX);
-
-    m_transforms[index] = matrix;
-    m_updateIndices[m_updateCount++] = index;
+    ThrowIfD3D12Failed(m_updateQueue.Push({ index, matrix }), ED3D12ExceptionCode::RSC_TRANSFORMATION_POOL_OVER_REQUEST);
 }
 
-void TransformManager::Upload(ID3D12GraphicsCommandList* cmdList)
+void TransformationPool::Upload(ID3D12GraphicsCommandList* cmdList)
 {
-    void* mapped = nullptr;
-
-    m_uploadBuffer->Map(0, nullptr, &mapped);
+    vector<TransformUpdateEntry> pendingUpdates;
+    TransformUpdateEntry updateEntry;
+    while (m_updateQueue.Pop(&updateEntry))
     {
-        XMMATRIX* mappedMatrices = reinterpret_cast<XMMATRIX*>(mapped);
-        for (UINT idx = 0; idx < m_updateCount; ++idx) 
-        {
-            UINT updatedIndex = m_updateIndices[idx];
-            mappedMatrices[updatedIndex] = m_transforms[updatedIndex];
-        }
+        pendingUpdates.emplace_back(updateEntry);
     }
-    m_uploadBuffer->Unmap(0, nullptr);
 
-    UINT rangeStart = UINT_MAX;
-    UINT rangeCount = 0;
-
-    auto FlushCopyRange = [&]() 
+    if (pendingUpdates.empty())
     {
-        if (rangeCount == 0) return;
+        return;
+    }
 
+    std::sort(pendingUpdates.begin(), pendingUpdates.end(),
+        [](const TransformUpdateEntry& a, const TransformUpdateEntry& b) 
+        {
+            return a.index < b.index;
+        }
+    );
+
+    void* mappedData = nullptr;
+    m_uploadBuffer->Map(0, nullptr, &mappedData);
+    auto uploadBufferData = static_cast<BYTE*>(mappedData);
+
+    for (const auto& update : pendingUpdates)
+    {
+        memcpy(
+            uploadBufferData + update.index * sizeof(DirectX::XMMATRIX),
+            &update.transform,
+            sizeof(DirectX::XMMATRIX)
+        );
+    }
+
+    for (size_t idx = 0; idx < pendingUpdates.size(); ++idx)
+    {
+        const UINT blockStartIndex = pendingUpdates[idx].index;
+        size_t blockEndIndex = idx;
+
+        while (blockEndIndex + 1 < pendingUpdates.size() &&
+            pendingUpdates[blockEndIndex + 1].index == pendingUpdates[blockEndIndex].index + 1)
+        {
+            blockEndIndex++;
+        }
+
+        const UINT elementsInBlock = (pendingUpdates[blockEndIndex].index - blockStartIndex) + 1;
         cmdList->CopyBufferRegion(
             m_defaultBuffer,
-            sizeof(DirectX::XMMATRIX) * rangeStart,
+            blockStartIndex * sizeof(DirectX::XMMATRIX),
             m_uploadBuffer,
-            sizeof(DirectX::XMMATRIX) * rangeStart,
-            sizeof(DirectX::XMMATRIX) * rangeCount
+            blockStartIndex * sizeof(DirectX::XMMATRIX),
+            elementsInBlock * sizeof(DirectX::XMMATRIX)
         );
 
-        rangeStart = UINT_MAX;
-        rangeCount = 0;
-    };
-
-
-    for (UINT i = 0; i < m_updateCount; ++i) 
-    {
-        UINT updateIndex = m_updateIndices[i];
-
-        if (rangeCount == 0) 
-        {
-            rangeStart = updateIndex;
-            rangeCount = 1;
-        }
-        else if (updateIndex == rangeStart + rangeCount) 
-        {
-            ++rangeCount;
-        }
-        else 
-        {
-            FlushCopyRange();
-            rangeStart = updateIndex;
-            rangeCount = 1;
-        }
+        idx = blockEndIndex;
     }
 
-    FlushCopyRange();
-    m_updateCount = 0;
+    m_uploadBuffer->Unmap(0, nullptr);
 }
 
-void TransformManager::BindToDescriptorHeap(
+void TransformationPool::BindToDescriptorHeap(
     ID3D12Device* device, 
     ID3D12DescriptorHeap* descriptorHeap
 )

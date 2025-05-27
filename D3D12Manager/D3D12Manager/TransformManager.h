@@ -1,42 +1,48 @@
 #pragma once
 #include "D3D12DllHelper.h"
+#include "LockfreeRingBuffer.h"
 
 namespace Resources
 {   
-    constexpr UINT MaxObjectCount = 1000000;
-    class D3D12MANAGER_API TransformManager
+    constexpr UINT MaxObjectCount = 1'000'000;
+    struct TransformUpdateEntry
+    {
+        UINT index;
+        DirectX::XMMATRIX transform;
+    };
+
+    template class D3D12MANAGER_API Utilities::LockfreeRingBuffer<UINT, MaxObjectCount>;
+    template class D3D12MANAGER_API Utilities::LockfreeRingBuffer<TransformUpdateEntry, MaxObjectCount>;
+
+    class D3D12MANAGER_API TransformationPool
     {
     public:
-        static void InitTransformManager(ID3D12Device* device);
-        inline static TransformManager& GetInstance() noexcept { return GTransformManager; }
+        static void InitTransformationPool(ID3D12Device* device);
+        inline static TransformationPool& GetInstance() noexcept { return GTransformationPool; }
 
     private:
-        static TransformManager GTransformManager;
+        static TransformationPool GTransformationPool;
 
     private:
-        TransformManager() = default;
-        ~TransformManager();
-        TransformManager(const TransformManager&) = delete;
-        TransformManager& operator=(const TransformManager&) = delete;
+        TransformationPool() = default;
+        ~TransformationPool();
+        TransformationPool(const TransformationPool&) = delete;
+        TransformationPool& operator=(const TransformationPool&) = delete;
 
     private:
-        UINT m_indices[MaxObjectCount];
-        UINT m_issueHead = MaxObjectCount;
-        UINT m_issueTail = 0;
+        Utilities::LockfreeRingBuffer<UINT, MaxObjectCount> m_indexQueue;
 
     public:
         UINT RequestIndex();
-        void DiscardIndex(UINT index);
+        inline void DiscardIndex(UINT index);
 
     private:
-        DirectX::XMMATRIX m_transforms[MaxObjectCount];
-        UINT m_updateIndices[MaxObjectCount];
-        UINT m_updateCount = 0;
-
+        Utilities::LockfreeRingBuffer<TransformUpdateEntry, MaxObjectCount> m_updateQueue;
+    
     public:
         void UpdateTransform(UINT index, const DirectX::XMMATRIX& matrix);
         void Upload(ID3D12GraphicsCommandList* cmdList);
-
+        
     private:
         ID3D12Resource* m_uploadBuffer = nullptr;
         ID3D12Resource* m_defaultBuffer = nullptr;

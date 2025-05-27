@@ -33,9 +33,9 @@ CCommandContextPool::~CCommandContextPool()
 {
 	for (UINT idx = 0; idx < MaxCommandContextCount; ++idx)
 	{
-		CCommandContext** commandContextAddress = nullptr;
-		Pop(commandContextAddress);
-		delete *commandContextAddress;
+		CCommandContext* commandContextAddress = nullptr;
+		Pop(&commandContextAddress);
+		delete commandContextAddress;
 	}
 }
 
