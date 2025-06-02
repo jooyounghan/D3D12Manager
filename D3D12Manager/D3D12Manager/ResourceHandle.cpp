@@ -2,12 +2,12 @@
 
 using namespace Resources;
 
-void ResourceControlBlock::AddRef() noexcept
+void SResourceControlBlock::AddRef() noexcept
 { 
     InterlockedIncrement(&m_refCount); 
 }
 
-void ResourceControlBlock::Release() noexcept
+void SResourceControlBlock::Release() noexcept
 {
     if (InterlockedDecrement(&m_refCount) == 0 && m_resource)
     {
@@ -15,23 +15,23 @@ void ResourceControlBlock::Release() noexcept
     }
 }
 
-ResourceHandle::ResourceHandle(ResourceControlBlock* resourceControlBlock)
+CResourceHandle::CResourceHandle(SResourceControlBlock* resourceControlBlock)
     : m_controlBlock(resourceControlBlock) 
 {
     if (m_controlBlock) m_controlBlock->AddRef();
 }
 
-ResourceHandle::~ResourceHandle()
+CResourceHandle::~CResourceHandle()
 {
     if (m_controlBlock) m_controlBlock->Release();
 }
 
-ResourceHandle::ResourceHandle(const ResourceHandle& other) : m_controlBlock(other.m_controlBlock)
+CResourceHandle::CResourceHandle(const CResourceHandle& other) : m_controlBlock(other.m_controlBlock)
 {
     if (m_controlBlock) m_controlBlock->AddRef();
 }
 
-ResourceHandle& Resources::ResourceHandle::operator=(const ResourceHandle& other)
+CResourceHandle& Resources::CResourceHandle::operator=(const CResourceHandle& other)
 {
     if (this != &other)
     {

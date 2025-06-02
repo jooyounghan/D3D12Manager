@@ -21,11 +21,11 @@ namespace Command
 
 	protected:
 		D3D12_COMMAND_LIST_TYPE m_commandType;
-		ID3D12CommandQueue* m_commandQueue = nullptr;
-		ID3D12Fence* m_fence = nullptr;
+		Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_commandQueue;
+		Microsoft::WRL::ComPtr<ID3D12Fence> m_fence;
 
 	public:
-		inline ID3D12CommandQueue* Get() const noexcept { return m_commandQueue; }
+		inline ID3D12CommandQueue* Get() const noexcept { return m_commandQueue.Get(); }
 
 	protected:
 		HANDLE m_fenceEvent = NULL;

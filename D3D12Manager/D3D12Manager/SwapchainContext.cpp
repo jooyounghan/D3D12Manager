@@ -3,6 +3,7 @@
 #include "DescriptorHelper.h"
 #include "d3dx12.h"
 
+using namespace Microsoft::WRL;
 using namespace Graphics;
 using namespace Resources;
 
@@ -45,12 +46,12 @@ CSwapchainContext::CSwapchainContext(
 
 	ThrowIfHResultFailed(device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_backBufferRTVHeap)));
 
-	m_backBufferResources = new ID3D12Resource* [m_frameCount];
+	m_backBufferResources = new ComPtr<ID3D12Resource>[m_frameCount];
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_backBufferRTVHeap->GetCPUDescriptorHandleForHeapStart());
 	for (UINT n = 0; n < m_frameCount; n++)
 	{
 		ThrowIfHResultFailed(m_swapChain->GetBuffer(n, IID_PPV_ARGS(&m_backBufferResources[n])));
-		device->CreateRenderTargetView(m_backBufferResources[n], nullptr, rtvHandle);
+		device->CreateRenderTargetView(m_backBufferResources[n].Get(), nullptr, rtvHandle);
 		rtvHandle.Offset(1, DescriptorHelper::RTVHeapIncrementSize);
 	}
 }
@@ -65,7 +66,7 @@ CSwapchainContext::~CSwapchainContext()
 D3D12_RESOURCE_BARRIER CSwapchainContext::CreateTransitionToRenderTargetBarrier() const noexcept
 {
 	return CD3DX12_RESOURCE_BARRIER::Transition(
-		m_backBufferResources[m_frameIndex],
+		m_backBufferResources[m_frameIndex].Get(),
 		D3D12_RESOURCE_STATE_PRESENT,
 		D3D12_RESOURCE_STATE_RENDER_TARGET
 	);
@@ -74,7 +75,7 @@ D3D12_RESOURCE_BARRIER CSwapchainContext::CreateTransitionToRenderTargetBarrier(
 D3D12_RESOURCE_BARRIER CSwapchainContext::CreateTransitionToPresentBarrier() const noexcept
 {
 	return CD3DX12_RESOURCE_BARRIER::Transition(
-		m_backBufferResources[m_frameIndex],
+		m_backBufferResources[m_frameIndex].Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET,
 		D3D12_RESOURCE_STATE_PRESENT
 	);

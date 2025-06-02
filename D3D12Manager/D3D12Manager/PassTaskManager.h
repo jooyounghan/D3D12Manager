@@ -15,16 +15,16 @@ namespace Stage
 	constexpr UINT MaxTaskQueueSize = 1024;
 	constexpr UINT StealSpinCount = 10;
 
-	class D3D12MANAGER_API PassTaskManager
+	class D3D12MANAGER_API GPassTaskManager
 	{
 	public:
-		static PassTaskManager& GetInstance();
+		static GPassTaskManager& GetInstance();
 
 	private:
-		PassTaskManager();
-		~PassTaskManager();
-		PassTaskManager(const PassTaskManager&) = delete;
-		PassTaskManager& operator=(const PassTaskManager&) = delete;
+		GPassTaskManager();
+		~GPassTaskManager();
+		GPassTaskManager(const GPassTaskManager&) = delete;
+		GPassTaskManager& operator=(const GPassTaskManager&) = delete;
 
 	private:
 		struct Task
@@ -33,7 +33,7 @@ namespace Stage
 			Command::CCommandContext* commandContext;
 		};
 
-		struct alignas(64) Worker : Utilities::LockfreeRingBuffer<Task, MaxTaskQueueSize>
+		struct alignas(64) Worker : Utilities::CLockfreeRingBuffer<Task, MaxTaskQueueSize>
 		{
 			HANDLE thread;
 			DWORD workerId;

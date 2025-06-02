@@ -25,9 +25,9 @@ namespace Graphics
 		UINT m_frameIndex = NULL;
 
 	protected:
-		IDXGISwapChain3*		m_swapChain = nullptr;
-		ID3D12Resource**		m_backBufferResources = nullptr;
-		ID3D12DescriptorHeap*	m_backBufferRTVHeap = nullptr;
+		Microsoft::WRL::ComPtr<IDXGISwapChain3>			m_swapChain;
+		Microsoft::WRL::ComPtr<ID3D12Resource>*			m_backBufferResources;
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>	m_backBufferRTVHeap;
 
 	public:
 		D3D12_RESOURCE_BARRIER CreateTransitionToRenderTargetBarrier() const noexcept;

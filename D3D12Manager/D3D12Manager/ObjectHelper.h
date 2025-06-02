@@ -3,7 +3,7 @@
 
 namespace Object
 {
-	class ObjectHelper
+	class GObjectHelper
 	{
 	public:
 		static DirectX::XMVECTOR QuaternionToEuler(const DirectX::XMVECTOR& q);

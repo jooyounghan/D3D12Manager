@@ -4,23 +4,23 @@
 
 using namespace Utilities;
 
-MultiThreadProperty& Utilities::MultiThreadProperty::GetInstance()
+GMultiThreadProperty& Utilities::GMultiThreadProperty::GetInstance()
 {
-	static MultiThreadProperty instance;
+	static GMultiThreadProperty instance;
 	return instance;
 }
 
-MultiThreadProperty::MultiThreadProperty()
+GMultiThreadProperty::GMultiThreadProperty()
 {
 	PhysicalProcessCount = GetPhysicalCoreCount();
 }
 
-MultiThreadProperty::~MultiThreadProperty()
+GMultiThreadProperty::~GMultiThreadProperty()
 {
 
 }
 
-UINT MultiThreadProperty::GetPhysicalCoreCount()
+UINT GMultiThreadProperty::GetPhysicalCoreCount()
 {
 	DWORD len = 0;
 	GetLogicalProcessorInformationEx(RelationProcessorCore, nullptr, &len);

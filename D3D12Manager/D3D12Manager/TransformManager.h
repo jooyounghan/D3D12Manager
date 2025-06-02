@@ -5,47 +5,47 @@
 namespace Resources
 {   
     constexpr UINT MaxObjectCount = 1'000'000;
-    struct TransformUpdateEntry
+    struct STransformUpdateEntry
     {
         UINT index;
         DirectX::XMMATRIX transform;
     };
 
-    template class D3D12MANAGER_API Utilities::LockfreeRingBuffer<UINT, MaxObjectCount>;
-    template class D3D12MANAGER_API Utilities::LockfreeRingBuffer<TransformUpdateEntry, MaxObjectCount>;
+    template class D3D12MANAGER_API Utilities::CLockfreeRingBuffer<UINT, MaxObjectCount>;
+    template class D3D12MANAGER_API Utilities::CLockfreeRingBuffer<STransformUpdateEntry, MaxObjectCount>;
 
-    class D3D12MANAGER_API TransformationPool
+    class D3D12MANAGER_API GTransformationPool
     {
     public:
         static void InitTransformationPool(ID3D12Device* device);
-        inline static TransformationPool& GetInstance() noexcept { return GTransformationPool; }
+        inline static GTransformationPool& GetInstance() noexcept { return GPool; }
 
     private:
-        static TransformationPool GTransformationPool;
+        static GTransformationPool GPool;
 
     private:
-        TransformationPool() = default;
-        ~TransformationPool();
-        TransformationPool(const TransformationPool&) = delete;
-        TransformationPool& operator=(const TransformationPool&) = delete;
+        GTransformationPool() = default;
+        ~GTransformationPool();
+        GTransformationPool(const GTransformationPool&) = delete;
+        GTransformationPool& operator=(const GTransformationPool&) = delete;
 
     private:
-        Utilities::LockfreeRingBuffer<UINT, MaxObjectCount> m_indexQueue;
+        Utilities::CLockfreeRingBuffer<UINT, MaxObjectCount> m_indexQueue;
 
     public:
         UINT RequestIndex();
         inline void DiscardIndex(UINT index);
 
     private:
-        Utilities::LockfreeRingBuffer<TransformUpdateEntry, MaxObjectCount> m_updateQueue;
+        Utilities::CLockfreeRingBuffer<STransformUpdateEntry, MaxObjectCount> m_updateQueue;
     
     public:
         void UpdateTransform(UINT index, const DirectX::XMMATRIX& matrix);
         void Upload(ID3D12GraphicsCommandList* cmdList);
         
     private:
-        ID3D12Resource* m_uploadBuffer = nullptr;
-        ID3D12Resource* m_defaultBuffer = nullptr;
+        Microsoft::WRL::ComPtr<ID3D12Resource> m_uploadBuffer;
+        Microsoft::WRL::ComPtr<ID3D12Resource> m_defaultBuffer;
         D3D12_GPU_VIRTUAL_ADDRESS m_gpuAddress = NULL;
     
     public:

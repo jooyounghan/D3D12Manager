@@ -13,7 +13,7 @@ CCommandContext::CCommandContext(
 	: m_commandType(commandType)
 {
 	ThrowIfHResultFailed(device->CreateCommandAllocator(commandType, IID_PPV_ARGS(&m_commandAllocator)));
-	ThrowIfHResultFailed(device->CreateCommandList(gpuNodeMask, commandType, m_commandAllocator, pipelineState, IID_PPV_ARGS(&m_commandList)));
+	ThrowIfHResultFailed(device->CreateCommandList(gpuNodeMask, commandType, m_commandAllocator.Get(), pipelineState, IID_PPV_ARGS(&m_commandList)));
 	FinishRecord();
 }
 
@@ -26,7 +26,7 @@ CCommandContext::~CCommandContext()
 void CCommandContext::StartRecord(ID3D12PipelineState* pipelineState)
 {
 	ThrowIfHResultFailed(m_commandAllocator->Reset());
-	ThrowIfHResultFailed(m_commandList->Reset(m_commandAllocator, pipelineState));
+	ThrowIfHResultFailed(m_commandList->Reset(m_commandAllocator.Get(), pipelineState));
 	m_isRecordable = true;
 }
 
@@ -39,5 +39,5 @@ void CCommandContext::FinishRecord()
 ID3D12GraphicsCommandList* CCommandContext::GetCommandList(bool expectedRecordState /*= true*/) const
 {
 	ThrowIfD3D12Failed(m_isRecordable == expectedRecordState, ED3D12ExceptionCode::EXC_COMMAND_LIST_INVALID_RECORD_STATE);
-	return m_commandList;
+	return m_commandList.Get();
 }

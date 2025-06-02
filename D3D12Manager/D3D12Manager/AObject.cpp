@@ -101,7 +101,7 @@ void AObject::DetachParent()
 		XMMatrixDecompose(&scale, &rotationQuaternion, &position, m_localTransformation);
 
 		XMStoreFloat3(&m_position, position);
-		radian = ObjectHelper::QuaternionToEuler(rotationQuaternion);
+		radian = GObjectHelper::QuaternionToEuler(rotationQuaternion);
 		XMStoreFloat3(&m_radian, radian);
 		XMStoreFloat3(&m_scale, scale);
 	}

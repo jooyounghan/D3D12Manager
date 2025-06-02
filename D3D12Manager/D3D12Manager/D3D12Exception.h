@@ -27,6 +27,10 @@ namespace Exception
 		RSC_TRANSFORMATION_POOL_OVER_REQUEST,
 		RSC_TRANSFORMATION_POOL_SPURIOUS_DISCARD,
 	// ===================================================
+
+	// Shader ============================================
+		SHADER_FILE_NOT_FOUNDED,
+	// ===================================================
 	};
 
 	static const char* GExceptionMessages[] = 
@@ -54,6 +58,9 @@ namespace Exception
 		"Transformation pool spurious discard",
 	// ===================================================
 
+	// Shader ============================================
+		"The shader file does not exist",
+	// ===================================================
 	};
 
 	class D3D12MANAGER_API CD3D12Exception : public AD3D12Exception

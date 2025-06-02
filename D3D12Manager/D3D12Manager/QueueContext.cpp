@@ -32,7 +32,7 @@ CQueueContext::~CQueueContext()
 
 void CQueueContext::WaitForGpuSync()
 {
-	ThrowIfHResultFailed(m_commandQueue->Signal(m_fence, m_expectedFenceValue));
+	ThrowIfHResultFailed(m_commandQueue->Signal(m_fence.Get(), m_expectedFenceValue));
 
 	if (m_fence->GetCompletedValue() < m_expectedFenceValue)
 	{

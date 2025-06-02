@@ -5,13 +5,13 @@ using namespace Command;
 using namespace Utilities;
 using namespace Stage;
 
-PassTaskManager& PassTaskManager::GetInstance()
+GPassTaskManager& GPassTaskManager::GetInstance()
 {
-	static PassTaskManager passTaskManager;
+	static GPassTaskManager passTaskManager;
 	return passTaskManager;
 }
 
-PassTaskManager::PassTaskManager()
+GPassTaskManager::GPassTaskManager()
 {
 	for (UINT idx = 0; idx < MaxWorkerThread; ++idx)
 	{
@@ -21,7 +21,7 @@ PassTaskManager::PassTaskManager()
 	}
 }
 
-PassTaskManager::~PassTaskManager()
+GPassTaskManager::~GPassTaskManager()
 {
 	InterlockedExchange(&m_shutdowned, TRUE);
 
@@ -32,7 +32,7 @@ PassTaskManager::~PassTaskManager()
 	}
 }
 
-void PassTaskManager::Submit(AGraphicsPass* pass, CCommandContext* commandContext)
+void GPassTaskManager::Submit(AGraphicsPass* pass, CCommandContext* commandContext)
 {
 	static __declspec(thread) int localCounter = 0;
 	int index = (localCounter++) % MaxWorkerThread;
@@ -40,9 +40,9 @@ void PassTaskManager::Submit(AGraphicsPass* pass, CCommandContext* commandContex
 	m_workers[index].Push({ pass, commandContext });
 }
 
-bool PassTaskManager::StealTask(int thiefIndex, Task* out)
+bool GPassTaskManager::StealTask(int thiefIndex, Task* out)
 {
-	PassTaskManager& passTaskManager = GetInstance();
+	GPassTaskManager& passTaskManager = GetInstance();
 	for (UINT victimIndex = 0; victimIndex < MaxWorkerThread; ++victimIndex)
 	{
 		if (thiefIndex != victimIndex) continue;
@@ -52,9 +52,9 @@ bool PassTaskManager::StealTask(int thiefIndex, Task* out)
 	return false;
 }
 
-DWORD WINAPI PassTaskManager::WorkerProc(LPVOID param) 
+DWORD WINAPI GPassTaskManager::WorkerProc(LPVOID param) 
 {
-	PassTaskManager& passTaskManager = GetInstance();
+	GPassTaskManager& passTaskManager = GetInstance();
 	Worker* self = (Worker*)param;
 	Task task;
 

@@ -5,11 +5,11 @@
 namespace Utilities
 {
 	template<typename T, UINT Capacity>
-	class LockfreeRingBuffer
+	class CLockfreeRingBuffer
 	{
 	public:
-		LockfreeRingBuffer() = default;
-		~LockfreeRingBuffer() = default;
+		CLockfreeRingBuffer() = default;
+		~CLockfreeRingBuffer() = default;
 
 	public:
 		bool Push(const T& item);
@@ -29,7 +29,7 @@ namespace Utilities
 	};
 
 	template<typename T, UINT Capacity>
-	inline bool LockfreeRingBuffer<T, Capacity>::Push(const T& item)
+	inline bool CLockfreeRingBuffer<T, Capacity>::Push(const T& item)
 	{
 		while (true)
 		{
@@ -51,7 +51,7 @@ namespace Utilities
 	}
 
 	template<typename T, UINT Capacity>
-	inline bool LockfreeRingBuffer<T, Capacity>::Pop(T* out)
+	inline bool CLockfreeRingBuffer<T, Capacity>::Pop(T* out)
 	{
 		while (true)
 		{
@@ -76,7 +76,7 @@ namespace Utilities
 	}
 
 	template<typename T, UINT Capacity>
-	inline bool LockfreeRingBuffer<T, Capacity>::TryNPop(UINT count, T* out)
+	inline bool CLockfreeRingBuffer<T, Capacity>::TryNPop(UINT count, T* out)
 	{
 		for (UINT spinCount = 0; spinCount < count; ++spinCount)
 		{

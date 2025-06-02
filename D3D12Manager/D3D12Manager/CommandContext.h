@@ -16,8 +16,8 @@ namespace Command
 
 	protected:
 		D3D12_COMMAND_LIST_TYPE m_commandType;
-		ID3D12CommandAllocator* m_commandAllocator = nullptr;
-		ID3D12GraphicsCommandList* m_commandList = nullptr;
+		Microsoft::WRL::ComPtr<ID3D12CommandAllocator> m_commandAllocator;
+		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_commandList;
 
 	public:
 		void StartRecord(ID3D12PipelineState* pipelineState);
@@ -31,7 +31,7 @@ namespace Command
 		inline bool IsRecording() const noexcept { return m_isRecordable; }
 
 	public:
-		ID3D12CommandAllocator* GetCommandAllocator() const { return m_commandAllocator; }
+		ID3D12CommandAllocator* GetCommandAllocator() const { return m_commandAllocator.Get(); }
 		ID3D12GraphicsCommandList* GetCommandList(bool expectedRecordState = true) const;
 	};
 }

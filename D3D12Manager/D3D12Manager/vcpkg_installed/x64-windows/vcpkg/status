@@ -6,3 +6,26 @@ Abi: 99a17e78ea86157792188bd3bfccedc18185bf2e6e608b234e5855bf9d715f4f
 Description: The D3D12 Helper Library
 Status: install ok installed
 
+Package: vcpkg-cmake-config
+Version: 2024-05-23
+Architecture: x64-windows
+Multi-Arch: same
+Abi: f32addc385aef4c1d16ed25593c80d6bd4fac3969f23daf9c5f4e5c923879cec
+Status: install ok installed
+
+Package: vcpkg-cmake
+Version: 2024-04-23
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 9731c909668537a439da3c225d054cda644445ca2ec000c984bc5c4347a025a3
+Status: install ok installed
+
+Package: directx-dxc
+Version: 2025-02-20
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 071cdde7b7d5af1b0593a82737ce341d47935c692493355fb66a1d70fd0ac275
+Description: DirectX Shader Compiler (LLVM/Clang)
+Status: install ok installed
+

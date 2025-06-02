@@ -3,7 +3,7 @@
 
 using namespace DirectX;
 
-XMVECTOR Object::ObjectHelper::QuaternionToEuler(const XMVECTOR& q)
+XMVECTOR Object::GObjectHelper::QuaternionToEuler(const XMVECTOR& q)
 {
 	XMFLOAT4 quat {};
 	XMStoreFloat4(&quat, q);

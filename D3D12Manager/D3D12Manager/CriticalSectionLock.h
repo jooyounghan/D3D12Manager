@@ -3,15 +3,15 @@
 
 namespace Utilities
 {
-	class D3D12MANAGER_API CriticalSectionLock
+	class D3D12MANAGER_API CCriticalSectionLock
 	{
     public:
-        CriticalSectionLock(CRITICAL_SECTION& cs);
-        ~CriticalSectionLock();
+        CCriticalSectionLock(CRITICAL_SECTION& cs);
+        ~CCriticalSectionLock();
 
     public:
-        CriticalSectionLock(const CriticalSectionLock&) = delete;
-        CriticalSectionLock& operator=(const CriticalSectionLock&) = delete;
+        CCriticalSectionLock(const CCriticalSectionLock&) = delete;
+        CCriticalSectionLock& operator=(const CCriticalSectionLock&) = delete;
 
     private:
         CRITICAL_SECTION& criticalSection;

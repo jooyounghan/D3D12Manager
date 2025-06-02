@@ -3,7 +3,7 @@
 
 namespace Resources
 {
-    struct D3D12MANAGER_API ResourceControlBlock
+    struct D3D12MANAGER_API SResourceControlBlock
     {
         ID3D12Resource* m_resource = nullptr;
         volatile LONG m_refCount = 0;
@@ -13,21 +13,21 @@ namespace Resources
         void Release() noexcept;
     };
 
-	class D3D12MANAGER_API ResourceHandle
+	class D3D12MANAGER_API CResourceHandle
 	{
     public:
-        explicit ResourceHandle(ResourceControlBlock* resourceControlBlock);
-        ~ResourceHandle();
+        explicit CResourceHandle(SResourceControlBlock* resourceControlBlock);
+        ~CResourceHandle();
 
     public:
-        ResourceHandle(const ResourceHandle& other);
-        ResourceHandle& operator=(const ResourceHandle& other);
+        CResourceHandle(const CResourceHandle& other);
+        CResourceHandle& operator=(const CResourceHandle& other);
 
     public:
         inline ID3D12Resource* Get() const noexcept { return m_controlBlock ? m_controlBlock->m_resource : nullptr; }
 
     private:
-        ResourceControlBlock* m_controlBlock = nullptr;
-        friend class ResourceManager;
+        SResourceControlBlock* m_controlBlock = nullptr;
+        friend class CResidentManager;
 	};
 }

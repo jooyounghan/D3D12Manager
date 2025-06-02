@@ -7,7 +7,7 @@ namespace Resources
 {
 	constexpr UINT MaxCommandContextCount = 1024;
 
-	class D3D12MANAGER_API CCommandContextPool : public Utilities::LockfreeRingBuffer<Command::CCommandContext*, MaxCommandContextCount>
+	class D3D12MANAGER_API CCommandContextPool : public Utilities::CLockfreeRingBuffer<Command::CCommandContext*, MaxCommandContextCount>
 	{
 	public:
 		static void InitCommandContextPool(ID3D12Device* device);

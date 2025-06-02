@@ -37,6 +37,9 @@
     <Filter Include="소스 파일\Stage\Graph">
       <UniqueIdentifier>{07b84c69-daaf-4d2d-b104-516e5d924e77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{1dffb68d-0c46-406a-9de8-118297598280}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -77,5 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -5,22 +5,22 @@ namespace Resources
 {
     constexpr UINT MaxResourceCount = 1'000'000;
 
-	class SINGLE_THREAD_ONLY D3D12MANAGER_API ResourceManager
+	class SINGLE_THREAD_ONLY D3D12MANAGER_API CResidentManager
 	{
     public:
-        static ResourceManager& GetInstance() noexcept;
+        static CResidentManager& GetInstance() noexcept;
 
     private:
-        ResourceManager();
-        ~ResourceManager();
-        ResourceManager(const ResourceManager&) = delete;
-        ResourceManager& operator=(const ResourceManager&) = delete;
+        CResidentManager();
+        ~CResidentManager();
+        CResidentManager(const CResidentManager&) = delete;
+        CResidentManager& operator=(const CResidentManager&) = delete;
 
     public:
         void UpdateResidency(ID3D12Device* device);
 
     public:
-        ResourceHandle CreateCommittedResource(
+        CResourceHandle CreateCommittedResource(
             ID3D12Device* device,
             const D3D12_HEAP_PROPERTIES* heapProperties,
             D3D12_HEAP_FLAGS heapFlags,
@@ -29,7 +29,7 @@ namespace Resources
             const D3D12_CLEAR_VALUE* optimizedClearValue);
  
     private:
-        ResourceControlBlock m_managedResources[MaxResourceCount];
+        SResourceControlBlock m_managedResources[MaxResourceCount];
         UINT m_resourceCount = 0;
         CRITICAL_SECTION m_listLock;
 	};

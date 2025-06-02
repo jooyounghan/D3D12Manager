@@ -36,7 +36,7 @@ void Stage::AGraphicsStage::InitStage()
 
 void Stage::AGraphicsStage::ExecuteStage(CCommandContextPool* commandContextPool, CQueueContext* queueContext)
 {
-	PassTaskManager& passTaskManager = PassTaskManager::GetInstance();
+	GPassTaskManager& passTaskManager = GPassTaskManager::GetInstance();
 
 	if (m_prerequisiteEvent) ThrowIfWinResultFailed(WaitForSingleObject(m_prerequisiteEvent, INFINITE), 0xFFFFFFFF, ECompareMethod::NOT_EQUAL);
 

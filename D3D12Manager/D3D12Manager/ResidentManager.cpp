@@ -1,4 +1,4 @@
-#include "ResourceManager.h"
+#include "ResidentManager.h"
 #include "D3D12AppHelper.h"
 #include "CriticalSectionLock.h"
 
@@ -6,23 +6,23 @@ using namespace Resources;
 using namespace Utilities;
 using namespace Exception;
 
-ResourceManager& ResourceManager::GetInstance() noexcept 
+CResidentManager& CResidentManager::GetInstance() noexcept 
 { 
-	static ResourceManager resourceManager;
+	static CResidentManager resourceManager;
 	return resourceManager;
 }
 
-ResourceManager::ResourceManager() 
+CResidentManager::CResidentManager() 
 {
 	InitializeCriticalSection(&m_listLock);
 }
 
-ResourceManager::~ResourceManager()
+CResidentManager::~CResidentManager()
 {
 	DeleteCriticalSection(&m_listLock);
 }
 
-void ResourceManager::UpdateResidency(ID3D12Device* device)
+void CResidentManager::UpdateResidency(ID3D12Device* device)
 {
     ID3D12Pageable** toMakeResident = new ID3D12Pageable* [MaxResourceCount];
     ID3D12Pageable** toEvict = new ID3D12Pageable * [MaxResourceCount];
@@ -30,11 +30,11 @@ void ResourceManager::UpdateResidency(ID3D12Device* device)
     UINT evictCount = 0;
 
     {
-        CriticalSectionLock listLock(m_listLock);
+        CCriticalSectionLock listLock(m_listLock);
 
         for (UINT i = 0; i < m_resourceCount; ++i)
         {
-            ResourceControlBlock& pCurrent = m_managedResources[i];
+            SResourceControlBlock& pCurrent = m_managedResources[i];
             if (pCurrent.m_resource)
             {
                 if (pCurrent.m_refCount >= 2 && pCurrent.m_isResident == 0)
@@ -59,7 +59,7 @@ void ResourceManager::UpdateResidency(ID3D12Device* device)
     if (evictCount > 0) device->Evict(evictCount, toEvict);
 }
 
-ResourceHandle ResourceManager::CreateCommittedResource(
+CResourceHandle CResidentManager::CreateCommittedResource(
 	ID3D12Device* device,
 	const D3D12_HEAP_PROPERTIES* heapProperties, 
 	D3D12_HEAP_FLAGS heapFlags, 
@@ -68,9 +68,9 @@ ResourceHandle ResourceManager::CreateCommittedResource(
 	const D3D12_CLEAR_VALUE* optimizedClearValue
 )
 {
-	CriticalSectionLock listLock(m_listLock);
+	CCriticalSectionLock listLock(m_listLock);
 	
-	ResourceControlBlock& controlBlock = m_managedResources[m_resourceCount];
+	SResourceControlBlock& controlBlock = m_managedResources[m_resourceCount];
 	ThrowIfHResultFailed(
 		device->CreateCommittedResource(
 			heapProperties, heapFlags, pDesc, initialResourceState, optimizedClearValue,
@@ -79,5 +79,5 @@ ResourceHandle ResourceManager::CreateCommittedResource(
 	);
 ;
 	m_resourceCount++;
-	return ResourceHandle(&controlBlock);
+	return CResourceHandle(&controlBlock);
 }

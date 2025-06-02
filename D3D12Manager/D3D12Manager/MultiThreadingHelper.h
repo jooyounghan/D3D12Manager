@@ -3,16 +3,16 @@
 
 namespace Utilities
 {
-	class D3D12MANAGER_API MultiThreadProperty
+	class D3D12MANAGER_API GMultiThreadProperty
 	{
 	public:
-		static MultiThreadProperty& GetInstance();
+		static GMultiThreadProperty& GetInstance();
 
 	private:
-		MultiThreadProperty();
-		~MultiThreadProperty();
-		MultiThreadProperty(const MultiThreadProperty&) = delete;
-		MultiThreadProperty& operator=(const MultiThreadProperty&) = delete;
+		GMultiThreadProperty();
+		~GMultiThreadProperty();
+		GMultiThreadProperty(const GMultiThreadProperty&) = delete;
+		GMultiThreadProperty& operator=(const GMultiThreadProperty&) = delete;
 
 	private:
 		UINT GetPhysicalCoreCount();

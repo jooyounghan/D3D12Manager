@@ -73,6 +73,12 @@
     <Filter Include="헤더 파일\Utilities\Lock-Free">
       <UniqueIdentifier>{53ad100a-255b-4545-81cc-cdc5f6a46267}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\PSO">
+      <UniqueIdentifier>{b011cf90-7bc4-4b01-a669-3f418bebe1bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\PSO">
+      <UniqueIdentifier>{c3f12bd3-3150-412c-974c-b197e310fc21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -141,14 +147,26 @@
     <ClCompile Include="CommandContextPool.cpp">
       <Filter>소스 파일\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>소스 파일\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="GpuResourceHandle.cpp">
+    <ClCompile Include="ResidentManager.cpp">
       <Filter>소스 파일\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ResourceHandle.cpp">
       <Filter>소스 파일\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="DxcHelper.cpp">
+      <Filter>소스 파일\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputePSO.cpp">
+      <Filter>소스 파일\PSO</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsPSO.cpp">
+      <Filter>소스 파일\PSO</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderModule.cpp">
+      <Filter>소스 파일\PSO</Filter>
+    </ClCompile>
+    <ClCompile Include="RootSignatureModule.cpp">
+      <Filter>소스 파일\PSO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -230,10 +248,7 @@
     <ClInclude Include="CommandContextPool.h">
       <Filter>헤더 파일\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>헤더 파일\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="GpuResourceHandle.h">
+    <ClInclude Include="ResidentManager.h">
       <Filter>헤더 파일\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ResourceHandle.h">
@@ -242,8 +257,23 @@
     <ClInclude Include="LockfreeRingBuffer.h">
       <Filter>헤더 파일\Utilities\Lock-Free</Filter>
     </ClInclude>
-    <ClInclude Include="LockfreeArray.h">
-      <Filter>헤더 파일\Utilities\Lock-Free</Filter>
+    <ClInclude Include="DxcHelper.h">
+      <Filter>헤더 파일\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="APipelineStateObject.h">
+      <Filter>헤더 파일\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsPSO.h">
+      <Filter>헤더 파일\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputePSO.h">
+      <Filter>헤더 파일\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderModule.h">
+      <Filter>헤더 파일\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignatureModule.h">
+      <Filter>헤더 파일\PSO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

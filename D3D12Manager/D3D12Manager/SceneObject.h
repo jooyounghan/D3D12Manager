@@ -3,11 +3,11 @@
 
 namespace Object
 {
-	class D3D12MANAGER_API SceneObject : public AObject
+	class D3D12MANAGER_API CSceneObject : public AObject
 	{
     public:
-        SceneObject() = default;
-        virtual ~SceneObject() override;
+        CSceneObject() = default;
+        virtual ~CSceneObject() override;
 
     protected:
         char* m_sceneObjectName = nullptr;

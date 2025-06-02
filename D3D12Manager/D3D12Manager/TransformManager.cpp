@@ -10,13 +10,13 @@ using namespace DirectX;
 using namespace Resources;
 using namespace Exception;
 
-TransformationPool TransformationPool::GTransformationPool;
+GTransformationPool GTransformationPool::GPool;
 
-void TransformationPool::InitTransformationPool(ID3D12Device* device)
+void GTransformationPool::InitTransformationPool(ID3D12Device* device)
 {
     for (UINT idx = 0; idx < MaxObjectCount; ++idx)
     {
-        GTransformationPool.m_indexQueue.Push(idx);
+        GPool.m_indexQueue.Push(idx);
     }
 
     D3D12_RESOURCE_DESC desc = {};
@@ -40,7 +40,7 @@ void TransformationPool::InitTransformationPool(ID3D12Device* device)
         &desc,
         D3D12_RESOURCE_STATE_COPY_DEST,
         nullptr,
-        IID_PPV_ARGS(&GTransformationPool.m_defaultBuffer)
+        IID_PPV_ARGS(&GPool.m_defaultBuffer)
     ));
 
     ThrowIfHResultFailed(device->CreateCommittedResource(
@@ -49,13 +49,13 @@ void TransformationPool::InitTransformationPool(ID3D12Device* device)
         &desc,
         D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
-        IID_PPV_ARGS(&GTransformationPool.m_uploadBuffer)
+        IID_PPV_ARGS(&GPool.m_uploadBuffer)
     ));
 
-    GTransformationPool.m_gpuAddress = GTransformationPool.m_defaultBuffer->GetGPUVirtualAddress();
+    GPool.m_gpuAddress = GPool.m_defaultBuffer->GetGPUVirtualAddress();
 }
 
-TransformationPool::~TransformationPool()
+GTransformationPool::~GTransformationPool()
 {
     if (m_uploadBuffer) 
     {
@@ -69,27 +69,27 @@ TransformationPool::~TransformationPool()
     }
 }
 
-UINT TransformationPool::RequestIndex()
+UINT GTransformationPool::RequestIndex()
 {
     UINT result;
     ThrowIfD3D12Failed(m_indexQueue.Pop(&result), ED3D12ExceptionCode::RSC_TRANSFORMATION_POOL_OVER_REQUEST);
     return result;
 }
 
-void TransformationPool::DiscardIndex(UINT index)
+void GTransformationPool::DiscardIndex(UINT index)
 {
     ThrowIfD3D12Failed(m_indexQueue.Push(index), ED3D12ExceptionCode::RSC_TRANSFORMATION_POOL_SPURIOUS_DISCARD);
 }
 
-void TransformationPool::UpdateTransform(UINT index, const XMMATRIX& matrix)
+void GTransformationPool::UpdateTransform(UINT index, const XMMATRIX& matrix)
 {
     ThrowIfD3D12Failed(m_updateQueue.Push({ index, matrix }), ED3D12ExceptionCode::RSC_TRANSFORMATION_POOL_OVER_REQUEST);
 }
 
-void TransformationPool::Upload(ID3D12GraphicsCommandList* cmdList)
+void GTransformationPool::Upload(ID3D12GraphicsCommandList* cmdList)
 {
-    vector<TransformUpdateEntry> pendingUpdates;
-    TransformUpdateEntry updateEntry;
+    vector<STransformUpdateEntry> pendingUpdates;
+    STransformUpdateEntry updateEntry;
     while (m_updateQueue.Pop(&updateEntry))
     {
         pendingUpdates.emplace_back(updateEntry);
@@ -101,7 +101,7 @@ void TransformationPool::Upload(ID3D12GraphicsCommandList* cmdList)
     }
 
     std::sort(pendingUpdates.begin(), pendingUpdates.end(),
-        [](const TransformUpdateEntry& a, const TransformUpdateEntry& b) 
+        [](const STransformUpdateEntry& a, const STransformUpdateEntry& b) 
         {
             return a.index < b.index;
         }
@@ -133,9 +133,9 @@ void TransformationPool::Upload(ID3D12GraphicsCommandList* cmdList)
 
         const UINT elementsInBlock = (pendingUpdates[blockEndIndex].index - blockStartIndex) + 1;
         cmdList->CopyBufferRegion(
-            m_defaultBuffer,
+            m_defaultBuffer.Get(),
             blockStartIndex * sizeof(DirectX::XMMATRIX),
-            m_uploadBuffer,
+            m_uploadBuffer.Get(),
             blockStartIndex * sizeof(DirectX::XMMATRIX),
             elementsInBlock * sizeof(DirectX::XMMATRIX)
         );
@@ -146,7 +146,7 @@ void TransformationPool::Upload(ID3D12GraphicsCommandList* cmdList)
     m_uploadBuffer->Unmap(0, nullptr);
 }
 
-void TransformationPool::BindToDescriptorHeap(
+void GTransformationPool::BindToDescriptorHeap(
     ID3D12Device* device, 
     ID3D12DescriptorHeap* descriptorHeap
 )
@@ -160,7 +160,7 @@ void TransformationPool::BindToDescriptorHeap(
     srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
     device->CreateShaderResourceView(
-        m_defaultBuffer,
+        m_defaultBuffer.Get(),
         &srvDesc,
         descriptorHeap->GetCPUDescriptorHandleForHeapStart()
     );

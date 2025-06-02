@@ -2,12 +2,12 @@
 
 using namespace Object;
 
-SceneObject::~SceneObject()
+CSceneObject::~CSceneObject()
 {
     if (m_sceneObjectName) free(m_sceneObjectName);
 }
 
-void SceneObject::SetSceneObjectName(const char* sceneObjectName)
+void CSceneObject::SetSceneObjectName(const char* sceneObjectName)
 {
     if (m_sceneObjectName)
     {
@@ -26,10 +26,10 @@ void SceneObject::SetSceneObjectName(const char* sceneObjectName)
     }
 }
 
-void Object::SceneObject::UpdateTransform()
+void Object::CSceneObject::UpdateTransform()
 {
 }
 
-void Object::SceneObject::UpdateImpl()
+void Object::CSceneObject::UpdateImpl()
 {
 }

@@ -1,10 +1,10 @@
 #include "CriticalSectionLock.h"
 
-Utilities::CriticalSectionLock::CriticalSectionLock(CRITICAL_SECTION& cs)
+Utilities::CCriticalSectionLock::CCriticalSectionLock(CRITICAL_SECTION& cs)
     : criticalSection(cs) {
     EnterCriticalSection(&criticalSection);
 }
 
-Utilities::CriticalSectionLock::~CriticalSectionLock() {
+Utilities::CCriticalSectionLock::~CCriticalSectionLock() {
     LeaveCriticalSection(&criticalSection);
 }
