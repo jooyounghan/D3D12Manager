@@ -57,16 +57,7 @@ void GTransformationPool::InitTransformationPool(ID3D12Device* device)
 
 GTransformationPool::~GTransformationPool()
 {
-    if (m_uploadBuffer) 
-    {
-        m_uploadBuffer->Release();
-        m_uploadBuffer = nullptr;
-    }
-    if (m_defaultBuffer) 
-    {
-        m_defaultBuffer->Release();
-        m_defaultBuffer = nullptr;
-    }
+
 }
 
 UINT GTransformationPool::RequestIndex()

@@ -34,7 +34,13 @@ namespace Graphics
 		D3D12_RESOURCE_BARRIER CreateTransitionToPresentBarrier() const noexcept;
 		D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferRTVHandle();
 
+	protected:
+		D3D12_VIEWPORT m_backBufferViewport;
+		D3D12_RECT m_backBufferScissorRect;
+
 	public:
+		const D3D12_VIEWPORT& GetBackBufferViewport() const noexcept { return m_backBufferViewport; }
+		const D3D12_RECT& GetBackBufferScissorRect() const noexcept { return m_backBufferScissorRect; }
 		void Present(UINT syncInterval, UINT flags);
 		void UpdateContext() noexcept;
 	};

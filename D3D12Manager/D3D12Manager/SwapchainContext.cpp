@@ -54,13 +54,24 @@ CSwapchainContext::CSwapchainContext(
 		device->CreateRenderTargetView(m_backBufferResources[n].Get(), nullptr, rtvHandle);
 		rtvHandle.Offset(1, DescriptorHelper::RTVHeapIncrementSize);
 	}
+
+	m_backBufferViewport.TopLeftX = 0.f;
+	m_backBufferViewport.TopLeftY = 0.f;
+	m_backBufferViewport.MinDepth = 0.f;
+	m_backBufferViewport.MaxDepth = 1.f;
+	m_backBufferViewport.Width = static_cast<float>(width);
+	m_backBufferViewport.Height = static_cast<float>(height);
+
+	m_backBufferScissorRect = {};
+	m_backBufferScissorRect.left = 0;
+	m_backBufferScissorRect.top = 0;
+	m_backBufferScissorRect.right = static_cast<LONG>(width);
+	m_backBufferScissorRect.bottom = static_cast<LONG>(height);
 }
 
 CSwapchainContext::~CSwapchainContext()
 {
 	delete[] m_backBufferResources;
-	m_backBufferRTVHeap->Release();
-	m_swapChain->Release();
 }
 
 D3D12_RESOURCE_BARRIER CSwapchainContext::CreateTransitionToRenderTargetBarrier() const noexcept

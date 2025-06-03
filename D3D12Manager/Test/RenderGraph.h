@@ -25,7 +25,7 @@ namespace Stage
 
 	protected:
 		virtual void OnGraphStarted() override {};
-		virtual void OnGraphFinished() override;;
+		virtual void OnGraphFinished() override;
 	};
 }
 

@@ -3,13 +3,13 @@
   "spdxVersion": "SPDX-2.2",
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
-  "documentNamespace": "https://spdx.org/spdxdocs/directx-dxc-x64-windows-2025-02-20-77e6f2e5-48de-42f9-bdf0-1ab8bbcd4b76",
-  "name": "directx-dxc:x64-windows@2025-02-20 071cdde7b7d5af1b0593a82737ce341d47935c692493355fb66a1d70fd0ac275",
+  "documentNamespace": "https://spdx.org/spdxdocs/directx-dxc-x64-windows-2025-05-30-25ba026a-c4be-47a2-90ef-2195b7692e2c",
+  "name": "directx-dxc:x64-windows@2025-05-30 3b10fbd55caa2b5f32067c97df1f0310096b104c9f7048cb69dbbbce1edba6e0",
   "creationInfo": {
     "creators": [
       "Tool: vcpkg-2025-03-22-d4dd14112c2026ee57e59f966ecfa3b9137bd143"
     ],
-    "created": "2025-05-29T12:03:10Z"
+    "created": "2025-06-02T21:06:05Z"
   },
   "relationships": [
     {
@@ -67,8 +67,8 @@
     {
       "name": "directx-dxc",
       "SPDXID": "SPDXRef-port",
-      "versionInfo": "2025-02-20",
-      "downloadLocation": "git+https://github.com/Microsoft/vcpkg@04df7510384611086c77478290dd717f511a9f94",
+      "versionInfo": "2025-05-30",
+      "downloadLocation": "git+https://github.com/Microsoft/vcpkg@6c2ea25fbffce0f36d5932bb824494b92c1f522b",
       "homepage": "https://github.com/microsoft/DirectXShaderCompiler",
       "licenseConcluded": "NOASSERTION",
       "licenseDeclared": "NOASSERTION",
@@ -79,7 +79,7 @@
     {
       "name": "directx-dxc:x64-windows",
       "SPDXID": "SPDXRef-binary",
-      "versionInfo": "071cdde7b7d5af1b0593a82737ce341d47935c692493355fb66a1d70fd0ac275",
+      "versionInfo": "3b10fbd55caa2b5f32067c97df1f0310096b104c9f7048cb69dbbbce1edba6e0",
       "downloadLocation": "NONE",
       "licenseConcluded": "NOASSERTION",
       "licenseDeclared": "NOASSERTION",
@@ -97,7 +97,7 @@
       "checksums": [
         {
           "algorithm": "SHA512",
-          "checksumValue": "48d246349a7b8c998d80969a3d0a383c9fd287c7130c0ea3b214a2e8630d36ac38b78c1263a954777d89760910092f7a9812d421784706efa182cefeb017c3c6"
+          "checksumValue": "afab400934a9d0a72e5da2ab4d63fb0432dbb19a73e7f2ecea9d266def96aa531103b2bd585f0f55515e5978ec3b0876ae3fd803145d5922d83f59cf324a6f73"
         }
       ]
     },
@@ -112,7 +112,7 @@
       "checksums": [
         {
           "algorithm": "SHA512",
-          "checksumValue": "2381852e0d57be65ab919df00d79cda3564cd3695c6415065680738b66de1fc106106baae322973c6a48337b97e603294ee5118f71559298b7097181e73e4b31"
+          "checksumValue": "72e5151c137ebec7dab3e9474c815f2bdb7b0a23e8257a83bb992772fa6c89d8aaa92aeb5bcdd7a5aa015d946216b6023d85440017f570fdb35d384f3c64924f"
         }
       ]
     },
@@ -134,7 +134,7 @@
   ],
   "files": [
     {
-      "fileName": "./C:/vcpkg/buildtrees/versioning_/versions/directx-dxc/04df7510384611086c77478290dd717f511a9f94/directx-dxc-config.cmake.in",
+      "fileName": "./C:/vcpkg/buildtrees/versioning_/versions/directx-dxc/6c2ea25fbffce0f36d5932bb824494b92c1f522b/directx-dxc-config.cmake.in",
       "SPDXID": "SPDXRef-file-0",
       "checksums": [
         {
@@ -146,19 +146,19 @@
       "copyrightText": "NOASSERTION"
     },
     {
-      "fileName": "./C:/vcpkg/buildtrees/versioning_/versions/directx-dxc/04df7510384611086c77478290dd717f511a9f94/portfile.cmake",
+      "fileName": "./C:/vcpkg/buildtrees/versioning_/versions/directx-dxc/6c2ea25fbffce0f36d5932bb824494b92c1f522b/portfile.cmake",
       "SPDXID": "SPDXRef-file-1",
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "7bb838708a5a1df5f610f0ec764d2523f3d67102882258d88e356535b63a7530"
+          "checksumValue": "0d7eaffbce75c1c81fca2695c5a4a5955187b36e41ff122e3cb80c66538d5629"
         }
       ],
       "licenseConcluded": "NOASSERTION",
       "copyrightText": "NOASSERTION"
     },
     {
-      "fileName": "./C:/vcpkg/buildtrees/versioning_/versions/directx-dxc/04df7510384611086c77478290dd717f511a9f94/usage",
+      "fileName": "./C:/vcpkg/buildtrees/versioning_/versions/directx-dxc/6c2ea25fbffce0f36d5932bb824494b92c1f522b/usage",
       "SPDXID": "SPDXRef-file-2",
       "checksums": [
         {
@@ -170,12 +170,12 @@
       "copyrightText": "NOASSERTION"
     },
     {
-      "fileName": "./C:/vcpkg/buildtrees/versioning_/versions/directx-dxc/04df7510384611086c77478290dd717f511a9f94/vcpkg.json",
+      "fileName": "./C:/vcpkg/buildtrees/versioning_/versions/directx-dxc/6c2ea25fbffce0f36d5932bb824494b92c1f522b/vcpkg.json",
       "SPDXID": "SPDXRef-file-3",
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "81ea71b66a5fda70ec8b4e1cdf0863d6e27995e5876a238605cc487883a52359"
+          "checksumValue": "e0e61912f27ddd6f40558ebb6e73621520f1f94a76fb0bf9eb732bd3395bf4ee"
         }
       ],
       "licenseConcluded": "NOASSERTION",

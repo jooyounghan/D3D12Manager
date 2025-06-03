@@ -26,8 +26,7 @@ CQueueContext::CQueueContext(
 }
 CQueueContext::~CQueueContext()
 {
-	m_commandQueue->Release();
-	m_fence->Release();
+
 }
 
 void CQueueContext::WaitForGpuSync()

@@ -3,9 +3,10 @@
   "version-semver": "0.0.1",
   "dependencies": [
     "d3dx12",
-    "directx-dxc"
+    "directx-dxc",
+    "assimp"
   ],
-  "builtin-baseline": "a9eee3b18df395dbb8be71a31bd78ea441056e42",
+  "builtin-baseline": "654410ee8e11f0610c11a4a49a8827a84be5e187",
   "overrides": [
     {
       "name": "d3dx12",
@@ -14,6 +15,10 @@
     {
       "name": "directx-dxc",
       "version-date": "2025-02-20"
+    },
+    {
+      "name": "assimp",
+      "version": "5.4.3"
     }
   ]
 }

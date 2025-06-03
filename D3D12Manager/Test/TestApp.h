@@ -1,8 +1,6 @@
 #pragma once
 #include "D3D12App.h"
 #include "RenderGraph.h"
-#include <memory>
-
 
 class CTestApp : public App::CD3D12App
 {

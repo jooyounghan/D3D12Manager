@@ -49,12 +49,6 @@
     <Filter Include="헤더 파일\Graphics">
       <UniqueIdentifier>{174372bf-58a4-48e1-8c06-47fcbf44efcd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Frame">
-      <UniqueIdentifier>{13b9b72e-4e35-49c9-94f9-49d4b20faffd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Frame">
-      <UniqueIdentifier>{f0360f42-6620-4840-91b1-ef57fba926b7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Stage">
       <UniqueIdentifier>{fbe52827-84ed-47ab-b85c-8845d1eca0eb}</UniqueIdentifier>
     </Filter>
@@ -78,6 +72,12 @@
     </Filter>
     <Filter Include="헤더 파일\PSO">
       <UniqueIdentifier>{c3f12bd3-3150-412c-974c-b197e310fc21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Asset">
+      <UniqueIdentifier>{86ccd7eb-0b6e-4404-af52-4d32f2e8885e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset">
+      <UniqueIdentifier>{f21e671f-1cff-48cc-ba7a-85a014ebdfdb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

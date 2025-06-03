@@ -7,10 +7,12 @@ using namespace std;
 using namespace Stage;
 using namespace Graphics;
 
-RenderStage::RenderStage(CSwapchainContext* swapchainContext)
-	: 
-	m_swapchainContextCached(swapchainContext),
-	m_clearPass(make_unique<ClearPass>(swapchainContext)),
+RenderStage::RenderStage(
+	ID3D12Device* device, 
+	CSwapchainContext* swapchainContext
+)
+	: m_swapchainContextCached(swapchainContext),
+	m_clearPass(make_unique<ClearPass>(device, swapchainContext)),
 	m_presentPass(make_unique<PresentPass>(swapchainContext))
 {
 	AGraphicsPass* clearPass[] = { m_clearPass.get() };
