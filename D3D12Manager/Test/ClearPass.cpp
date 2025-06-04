@@ -2,7 +2,6 @@
 #include "CommandContext.h"
 #include "SwapchainContext.h"
 #include "DxcHelper.h"
-#include "d3dx12.h"
 
 using namespace std;
 using namespace Stage;
@@ -10,20 +9,23 @@ using namespace Command;
 using namespace Graphics;
 using namespace Utilities;
 using namespace PSO;
+using namespace Asset;
 
-VertexPosition positionData[] = {
-	{  0.0f,  0.5f, 0.5f },  // top
-	{  0.5f, -0.5f, 0.5f },  // bottom right
-	{ -0.5f, -0.5f, 0.5f },  // bottom left
+DirectX::XMFLOAT3 positionData[] = 
+{
+	{  0.0f,  0.5f, 0.5f },
+	{  0.5f, -0.5f, 0.5f },
+	{ -0.5f, -0.5f, 0.5f },
 };
 
-VertexTexcoord texcoordData[] = {
+DirectX::XMFLOAT2 texcoordData[] = 
+{
 	{ 0.5f, 0.0f },
 	{ 1.0f, 1.0f },
 	{ 0.0f, 1.0f },
 };
 
-uint16_t indexData[] = { 0, 1, 2 };
+UINT indexData[] = { 0, 1, 2 };
 
 ClearPass::ClearPass(
 	ID3D12Device* device, 
@@ -64,54 +66,6 @@ ClearPass::ClearPass(
 	m_graphicsPSO->Create(device, m_rootSignatureModule.get());
 }
 
-ID3D12Resource* Stage::ClearPass::CreateDefaultBuffer(
-	ID3D12Device* device, 
-	ID3D12GraphicsCommandList* cmdList, 
-	const void* initData, 
-	UINT64 byteSize, 
-	ID3D12Resource** uploadBuffer
-)
-{
-	ID3D12Resource* defaultBuffer = nullptr;
-
-	D3D12_HEAP_PROPERTIES heapProps = {};
-	heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
-
-	D3D12_RESOURCE_DESC resDesc = {};
-	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resDesc.Width = byteSize;
-	resDesc.Height = 1;
-	resDesc.DepthOrArraySize = 1;
-	resDesc.MipLevels = 1;
-	resDesc.SampleDesc.Count = 1;
-	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-	device->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &resDesc,
-		D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(&defaultBuffer));
-
-	heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
-
-	device->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &resDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(uploadBuffer));
-
-	D3D12_SUBRESOURCE_DATA subResourceData = {};
-	subResourceData.pData = initData;
-	subResourceData.RowPitch = byteSize;
-	subResourceData.SlicePitch = subResourceData.RowPitch;
-
-	UpdateSubresources(cmdList, defaultBuffer, *uploadBuffer, 0, 0, 1, &subResourceData);
-
-	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Transition.pResource = defaultBuffer;
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COMMON;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
-	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	cmdList->ResourceBarrier(1, &barrier);
-
-	return defaultBuffer;
-}
-
 void ClearPass::ExcutePassImpl(CCommandContext* commandContext)
 {
 	static FLOAT clearColor[4] = { 0.f, 0.f, 0.f, 1.f };
@@ -120,27 +74,9 @@ void ClearPass::ExcutePassImpl(CCommandContext* commandContext)
 
 	if (!initialized)
 	{
-		UINT positionBufferSize = sizeof(positionData);
-		positionBuffer = CreateDefaultBuffer(m_device, commandList, positionData, positionBufferSize, &positionUpload);
-
-		UINT texcoordBufferSize = sizeof(texcoordData);
-		texcoordBuffer = CreateDefaultBuffer(m_device, commandList, texcoordData, texcoordBufferSize, &texcoordUpload);
-
-		UINT indexBufferSize = sizeof(indexData);
-		indexBuffer = CreateDefaultBuffer(m_device, commandList, indexData, indexBufferSize, &indexUpload);
-
-		vbView[0].BufferLocation = positionBuffer->GetGPUVirtualAddress();
-		vbView[0].SizeInBytes = positionBufferSize;
-		vbView[0].StrideInBytes = sizeof(VertexPosition);
-
-		vbView[1].BufferLocation = texcoordBuffer->GetGPUVirtualAddress();
-		vbView[1].SizeInBytes = texcoordBufferSize;
-		vbView[1].StrideInBytes = sizeof(VertexTexcoord);
-
-		ibView.BufferLocation = indexBuffer->GetGPUVirtualAddress();
-		ibView.Format = DXGI_FORMAT_R16_UINT;
-		ibView.SizeInBytes = indexBufferSize;
-
+		m_triangleMesh = make_unique<MeshAsset>(3, positionData, 3, indexData);
+		m_triangleMesh->SetTexCoordsTarget(texcoordData);
+		m_triangleMesh->Initialize(m_device, commandList);
 		initialized = true;
 	}
 
@@ -158,7 +94,7 @@ void ClearPass::ExcutePassImpl(CCommandContext* commandContext)
 	commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 	commandList->SetGraphicsRootSignature(m_rootSignatureModule->GetRootSignature());
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	commandList->IASetVertexBuffers(0, 2, vbView);
-	commandList->IASetIndexBuffer(&ibView);
+	commandList->IASetVertexBuffers(0, m_triangleMesh->GetVertexBufferViewCount(), m_triangleMesh->GetVertexBufferView());
+	commandList->IASetIndexBuffer(m_triangleMesh->GetIndexBufferView());
 	commandList->DrawIndexedInstanced(3, 1, 0, 0, 0);
 }

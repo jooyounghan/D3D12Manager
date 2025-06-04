@@ -26,7 +26,8 @@ namespace Resources
             D3D12_HEAP_FLAGS heapFlags,
             const D3D12_RESOURCE_DESC* pDesc,
             D3D12_RESOURCE_STATES initialResourceState,
-            const D3D12_CLEAR_VALUE* optimizedClearValue);
+            const D3D12_CLEAR_VALUE* optimizedClearValue
+        );
  
     private:
         SResourceControlBlock m_managedResources[MaxResourceCount];

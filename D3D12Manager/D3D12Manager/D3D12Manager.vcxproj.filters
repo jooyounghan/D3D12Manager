@@ -168,6 +168,9 @@
     <ClCompile Include="RootSignatureModule.cpp">
       <Filter>소스 파일\PSO</Filter>
     </ClCompile>
+    <ClCompile Include="MeshAsset.cpp">
+      <Filter>소스 파일\Asset</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3D12DllHelper.h">
@@ -274,6 +277,12 @@
     </ClInclude>
     <ClInclude Include="RootSignatureModule.h">
       <Filter>헤더 파일\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshAsset.h">
+      <Filter>헤더 파일\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="IAsset.h">
+      <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

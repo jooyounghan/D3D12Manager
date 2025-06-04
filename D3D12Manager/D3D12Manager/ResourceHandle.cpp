@@ -11,7 +11,7 @@ void SResourceControlBlock::Release() noexcept
 {
     if (InterlockedDecrement(&m_refCount) == 0 && m_resource)
     {
-        delete m_resource;
+        m_resource->Release();
     }
 }
 

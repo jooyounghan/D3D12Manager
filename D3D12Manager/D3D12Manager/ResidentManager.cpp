@@ -51,6 +51,10 @@ void CResidentManager::UpdateResidency(ID3D12Device* device)
                         toEvict[evictCount++] = pCurrent.m_resource;
                     }
                 }
+                else
+                {
+                    // Delete
+                }
             }
         }
     }
