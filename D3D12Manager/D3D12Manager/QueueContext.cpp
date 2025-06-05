@@ -1,13 +1,14 @@
 #include "QueueContext.h"
 #include "CommandContext.h"
+#include "D3D12App.h"
 #include "D3D12AppHelper.h"
 
 using namespace std;
+using namespace App;
 using namespace Command;
 using namespace Exception;
 
 CQueueContext::CQueueContext(
-	ID3D12Device* device, 
 	D3D12_COMMAND_LIST_TYPE commandType, 
 	D3D12_COMMAND_QUEUE_FLAGS commandQueueFlag/* = D3D12_COMMAND_QUEUE_FLAG_NONE*/,
 	UINT64 initialFenceValue /*= NULL */,
@@ -16,6 +17,7 @@ CQueueContext::CQueueContext(
 	: m_commandType(commandType),
 	m_expectedFenceValue(initialFenceValue + 1)
 {
+	ID3D12Device* device = CD3D12App::GApp->GetDevice();
 	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 	queueDesc.Flags = commandQueueFlag;
 	queueDesc.Type = commandType;

@@ -1,6 +1,8 @@
 #include "DxcHelper.h"
+#include "D3D12App.h"
 #include "D3D12AppHelper.h"
 
+using namespace App;
 using namespace Utilities;
 using namespace Exception;
 
@@ -27,7 +29,6 @@ void GDxcHelper::CompileShader(
     LPCWSTR entry,
     LPCWSTR target,
     OUT PSO::CShaderModule* shaderModule,
-    ID3D12Device* device /*= nullptr*/,
     OUT PSO::CRootSignatureModule* rootSignatureModule/* = nullptr*/,
     LPCWSTR* extraArgs /*= nullptr*/,
     UINT extraArgCount /*= 0*/
@@ -65,8 +66,8 @@ void GDxcHelper::CompileShader(
 
     shaderModule->SetShaderByteCode(result);
 
-    if (device && rootSignatureModule)
+    if (rootSignatureModule)
     {
-        rootSignatureModule->SetRootSignature(device, result);
+        rootSignatureModule->SetRootSignature(result);
     }
 }

@@ -38,7 +38,7 @@ namespace PSO
         void SetDepthStencilState(const D3D12_DEPTH_STENCIL_DESC& depthStencilDesc);
 
 	public:
-		virtual void Create(ID3D12Device* device, CRootSignatureModule* rootSignatureModule) override;
+		virtual void Create(CRootSignatureModule* rootSignatureModule) override;
 	};
 }
 

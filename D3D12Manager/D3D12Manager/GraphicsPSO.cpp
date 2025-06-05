@@ -1,7 +1,9 @@
 #include "GraphicsPSO.h"
+#include "D3D12App.h"
 #include "D3D12AppHelper.h"
 #include "d3dx12.h"
 
+using namespace App;
 using namespace PSO;
 
 CGraphicsPSO::CGraphicsPSO()
@@ -79,8 +81,10 @@ void CGraphicsPSO::SetDepthStencilState(const D3D12_DEPTH_STENCIL_DESC& depthSte
     m_desc.DepthStencilState = depthStencilDesc;
 }
 
-void CGraphicsPSO::Create(ID3D12Device* device, CRootSignatureModule* rootSignatureModule)
+void CGraphicsPSO::Create(CRootSignatureModule* rootSignatureModule)
 {
+    ID3D12Device* device = CD3D12App::GApp->GetDevice();
+
     m_desc.pRootSignature = rootSignatureModule->GetRootSignature();
     ThrowIfHResultFailed(
         device->CreateGraphicsPipelineState(&m_desc, IID_PPV_ARGS(&m_pipelineState))

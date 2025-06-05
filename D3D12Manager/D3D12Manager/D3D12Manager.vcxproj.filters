@@ -73,11 +73,17 @@
     <Filter Include="헤더 파일\PSO">
       <UniqueIdentifier>{c3f12bd3-3150-412c-974c-b197e310fc21}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Asset">
+    <Filter Include="소스 파일\Resources\Asset">
       <UniqueIdentifier>{86ccd7eb-0b6e-4404-af52-4d32f2e8885e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Asset">
+    <Filter Include="소스 파일\Resources\Asset\Loader">
+      <UniqueIdentifier>{3796b6d6-2e61-4d45-abf8-b78755fcf916}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Resources\Asset">
       <UniqueIdentifier>{f21e671f-1cff-48cc-ba7a-85a014ebdfdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Resources\Asset\Loader">
+      <UniqueIdentifier>{9924a8a3-f12b-464e-9201-21a6504b008c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -147,12 +153,6 @@
     <ClCompile Include="CommandContextPool.cpp">
       <Filter>소스 파일\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="ResidentManager.cpp">
-      <Filter>소스 파일\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceHandle.cpp">
-      <Filter>소스 파일\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="DxcHelper.cpp">
       <Filter>소스 파일\Utilities</Filter>
     </ClCompile>
@@ -169,7 +169,16 @@
       <Filter>소스 파일\PSO</Filter>
     </ClCompile>
     <ClCompile Include="MeshAsset.cpp">
-      <Filter>소스 파일\Asset</Filter>
+      <Filter>소스 파일\Resources\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="FBXLoader.cpp">
+      <Filter>소스 파일\Resources\Asset\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager.cpp">
+      <Filter>소스 파일\Resources\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="AAsset.cpp">
+      <Filter>소스 파일\Resources\Asset</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -251,12 +260,6 @@
     <ClInclude Include="CommandContextPool.h">
       <Filter>헤더 파일\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="ResidentManager.h">
-      <Filter>헤더 파일\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceHandle.h">
-      <Filter>헤더 파일\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="LockfreeRingBuffer.h">
       <Filter>헤더 파일\Utilities\Lock-Free</Filter>
     </ClInclude>
@@ -279,10 +282,19 @@
       <Filter>헤더 파일\PSO</Filter>
     </ClInclude>
     <ClInclude Include="MeshAsset.h">
-      <Filter>헤더 파일\Asset</Filter>
+      <Filter>헤더 파일\Resources\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="IAsset.h">
-      <Filter>헤더 파일\Asset</Filter>
+    <ClInclude Include="AAsset.h">
+      <Filter>헤더 파일\Resources\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>헤더 파일\Resources\Asset\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager.h">
+      <Filter>헤더 파일\Resources\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetType.h">
+      <Filter>헤더 파일\Resources\Asset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

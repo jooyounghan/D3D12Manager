@@ -1,17 +1,19 @@
 #include "CommandContext.h"
+#include "D3D12App.h"
 #include "D3D12AppHelper.h"
 
+using namespace App;
 using namespace Command;
 using namespace Exception;
 
 CCommandContext::CCommandContext(
-	ID3D12Device* device, 
 	D3D12_COMMAND_LIST_TYPE commandType,
 	ID3D12PipelineState* pipelineState,
 	UINT gpuNodeMask /*= NULL */
 )
 	: m_commandType(commandType)
 {
+	ID3D12Device* device = CD3D12App::GApp->GetDevice();
 	ThrowIfHResultFailed(device->CreateCommandAllocator(commandType, IID_PPV_ARGS(&m_commandAllocator)));
 	ThrowIfHResultFailed(device->CreateCommandList(gpuNodeMask, commandType, m_commandAllocator.Get(), pipelineState, IID_PPV_ARGS(&m_commandList)));
 	FinishRecord();

@@ -16,6 +16,6 @@ namespace PSO
         void SetShaderModule(CShaderModule* csModule);
 
     public:
-        virtual void Create(ID3D12Device* device, CRootSignatureModule* rootSignatureModule) override;
+        virtual void Create(CRootSignatureModule* rootSignatureModule) override;
 	};
 }

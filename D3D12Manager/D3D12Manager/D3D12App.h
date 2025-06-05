@@ -36,8 +36,11 @@ namespace App
     public:
         inline UINT GetWidth() const noexcept { return m_width; }
         inline UINT GetHeight() const noexcept { return m_height; }
-        inline ID3D12Device* GetDevice() const { return m_device.Get(); }
 
+    public:
+        inline ID3D12Device* GetDevice() const { return m_device.Get(); }
+        inline IDXGIFactory* GetFactory() const { return m_factory.Get(); }
+    
     public:
         int Run();
 

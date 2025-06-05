@@ -1,11 +1,14 @@
 #include "RootSignatureModule.h"
+#include "D3D12App.h"
 #include "D3D12AppHelper.h"
 
 using namespace Microsoft::WRL;
+using namespace App;
 using namespace PSO;
 
-void CRootSignatureModule::SetRootSignature(ID3D12Device* device, IDxcResult* compileResult)
+void CRootSignatureModule::SetRootSignature(IDxcResult* compileResult)
 {
+    ID3D12Device* device = CD3D12App::GApp->GetDevice();
     ComPtr<IDxcBlob> rootSignatureBlob;
 	ThrowIfHResultFailed(compileResult->GetOutput(DXC_OUT_ROOT_SIGNATURE, IID_PPV_ARGS(&rootSignatureBlob), nullptr));
 
@@ -19,7 +22,6 @@ void CRootSignatureModule::SetRootSignature(ID3D12Device* device, IDxcResult* co
 }
 
 void CRootSignatureModule::SetRootSignature(
-	ID3D12Device* device, 
 	UINT numParameters, 
 	D3D12_ROOT_PARAMETER* rootParams, 
 	UINT numStaticSamplers, 
@@ -27,7 +29,8 @@ void CRootSignatureModule::SetRootSignature(
 	D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlag
 )
 {
-	D3D12_ROOT_SIGNATURE_DESC rootSigDesc = {};
+    ID3D12Device* device = CD3D12App::GApp->GetDevice();
+    D3D12_ROOT_SIGNATURE_DESC rootSigDesc = {};
 	rootSigDesc.NumParameters = numParameters;
 	rootSigDesc.pParameters = rootParams;
 	rootSigDesc.NumStaticSamplers = numStaticSamplers;

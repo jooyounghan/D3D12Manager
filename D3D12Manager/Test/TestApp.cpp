@@ -18,10 +18,7 @@ void CTestApp::OnInit()
 {
 	CD3D12App::OnInit();
 
-	DescriptorHelper::InitDescriptorHelper(m_device.Get());
-	CCommandContextPool::InitCommandContextPool(m_device.Get());
-
-	m_renderGraph = make_unique<RenderGraph>(m_device.Get(), m_factory.Get(), m_width, m_height, m_windowHandle);
+	m_renderGraph = make_unique<RenderGraph>(m_width, m_height, m_windowHandle);
 }
 
 inline void CTestApp::OnUpdate(float dt) 

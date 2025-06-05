@@ -11,7 +11,6 @@ namespace Command
 	{
 	public:
 		CQueueContext(
-			ID3D12Device* device,
 			D3D12_COMMAND_LIST_TYPE commandType,
 			D3D12_COMMAND_QUEUE_FLAGS commandQueueFlag = D3D12_COMMAND_QUEUE_FLAG_NONE,
 			UINT64 initialFenceValue = NULL,

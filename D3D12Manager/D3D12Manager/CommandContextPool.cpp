@@ -7,27 +7,24 @@ using namespace Command;
 using namespace Utilities;
 using namespace Exception;
 
-CCommandContextPool CCommandContextPool::GDirectCommandContextPool;
-CCommandContextPool CCommandContextPool::GCopyCommandContextPool;
-CCommandContextPool CCommandContextPool::GComputeCommandContextPool;
-
-
-void CCommandContextPool::InitCommandContextPool(ID3D12Device* device)
-{
-	for (UINT idx = 0; idx < MaxCommandContextCount; ++idx)
-	{
-		GDirectCommandContextPool.Push(new CCommandContext(device, D3D12_COMMAND_LIST_TYPE_DIRECT, nullptr));
-		GCopyCommandContextPool.Push(new CCommandContext(device, D3D12_COMMAND_LIST_TYPE_COPY, nullptr));
-		GComputeCommandContextPool.Push(new CCommandContext(device, D3D12_COMMAND_LIST_TYPE_COMPUTE, nullptr));
-	}
-}
-
 CCommandContextPool& CCommandContextPool::GetInstance(D3D12_COMMAND_LIST_TYPE type) noexcept
 {
+	static CCommandContextPool GDirectCommandContextPool(D3D12_COMMAND_LIST_TYPE_DIRECT);
+	static CCommandContextPool GCopyCommandContextPool(D3D12_COMMAND_LIST_TYPE_COPY);
+	static CCommandContextPool GComputeCommandContextPool(D3D12_COMMAND_LIST_TYPE_COMPUTE);
+
 	return type == D3D12_COMMAND_LIST_TYPE_DIRECT ? GDirectCommandContextPool :
 		type == D3D12_COMMAND_LIST_TYPE_COPY ? GCopyCommandContextPool : GComputeCommandContextPool;
 }
 
+
+CCommandContextPool::CCommandContextPool(D3D12_COMMAND_LIST_TYPE type)
+{
+	for (UINT idx = 0; idx < MaxCommandContextCount; ++idx)
+	{
+		Push(new CCommandContext(type, nullptr));
+	}
+}
 
 CCommandContextPool::~CCommandContextPool()
 {

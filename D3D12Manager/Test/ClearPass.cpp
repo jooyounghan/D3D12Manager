@@ -8,8 +8,8 @@ using namespace Stage;
 using namespace Command;
 using namespace Graphics;
 using namespace Utilities;
+using namespace Resources;
 using namespace PSO;
-using namespace Asset;
 
 DirectX::XMFLOAT3 positionData[] = 
 {
@@ -27,11 +27,8 @@ DirectX::XMFLOAT2 texcoordData[] =
 
 UINT indexData[] = { 0, 1, 2 };
 
-ClearPass::ClearPass(
-	ID3D12Device* device, 
-	CSwapchainContext* swapchainContext
-)
-	: AGraphicsPass(nullptr), m_swapchainContextCached(swapchainContext), m_device(device)
+ClearPass::ClearPass(CSwapchainContext* swapchainContext)
+	: AGraphicsPass(nullptr), m_swapchainContextCached(swapchainContext)
 {
 	m_vertexShaderModule = make_unique<CShaderModule>();
 	m_pixelShaderModule = make_unique<CShaderModule>();
@@ -43,9 +40,7 @@ ClearPass::ClearPass(
 	dxcHelper.CompileShader(L"./VertexShader.hlsl", L"main", L"vs_6_0", m_vertexShaderModule.get());
 	dxcHelper.CompileShader(L"./PixelShader.hlsl", L"main", L"ps_6_0", m_pixelShaderModule.get());
 
-	m_rootSignatureModule->SetRootSignature(
-		device, 0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT
-	);
+	m_rootSignatureModule->SetRootSignature(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	m_graphicsPSO->SetShaderModules(
 		m_vertexShaderModule.get(),
@@ -63,7 +58,7 @@ ClearPass::ClearPass(
 	m_graphicsPSO->SetTopology(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 	m_graphicsPSO->SetInputLayout({ inputElementDesc, _countof(inputElementDesc) });
 	m_graphicsPSO->SetDepthStencilState(depthStencilDesc);
-	m_graphicsPSO->Create(device, m_rootSignatureModule.get());
+	m_graphicsPSO->Create(m_rootSignatureModule.get());
 }
 
 void ClearPass::ExcutePassImpl(CCommandContext* commandContext)
@@ -76,7 +71,7 @@ void ClearPass::ExcutePassImpl(CCommandContext* commandContext)
 	{
 		m_triangleMesh = make_unique<MeshAsset>(3, positionData, 3, indexData);
 		m_triangleMesh->SetTexCoordsTarget(texcoordData);
-		m_triangleMesh->Initialize(m_device, commandList);
+		m_triangleMesh->Initialize(commandList);
 		initialized = true;
 	}
 

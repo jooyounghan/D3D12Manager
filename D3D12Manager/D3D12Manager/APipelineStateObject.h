@@ -14,7 +14,7 @@ namespace PSO
 		Microsoft::WRL::ComPtr<ID3D12PipelineState> m_pipelineState;
 
 	public:
-		virtual void Create(ID3D12Device* device, CRootSignatureModule* rootSignatureModule) = 0;
+		virtual void Create(CRootSignatureModule* rootSignatureModule) = 0;
 		ID3D12PipelineState* GetPipelineState() const noexcept { return m_pipelineState.Get(); }
 	};
 }

@@ -11,12 +11,7 @@ namespace Stage
 	class RenderGraph : public AGraphicsGraph
 	{
 	public:
-		RenderGraph(
-			ID3D12Device* device, 
-			IDXGIFactory* factory,
-			UINT width, UINT height,
-			HWND wndHandle
-		);
+		RenderGraph(UINT width, UINT height, HWND wndHandle);
 		~RenderGraph() override = default;
 
 	protected:

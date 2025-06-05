@@ -7,7 +7,6 @@ namespace Command
 	{
 	public:
 		CCommandContext(
-			ID3D12Device* device, 
 			D3D12_COMMAND_LIST_TYPE commandType,
 			ID3D12PipelineState* pipelineState,
 			UINT gpuNodeMask = NULL

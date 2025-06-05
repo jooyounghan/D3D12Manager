@@ -1,9 +1,9 @@
 #pragma once
-#include "IAsset.h"
+#include "AAsset.h"
 
-namespace Asset
+namespace Resources
 {
-	class D3D12MANAGER_API MeshAsset : public IAsset
+	class D3D12MANAGER_API MeshAsset : public AAsset
 	{
 	public:
 		MeshAsset(
@@ -29,49 +29,49 @@ namespace Asset
 		inline void SetNormalsTarget(DirectX::XMFLOAT3* normals) noexcept { m_normals = normals; };
 
 	protected:
-		Resources::CResourceHandle m_positionBuffer;
-		Resources::CResourceHandle m_texCoordBuffer;
-		Resources::CResourceHandle m_normalBuffer;
-		Resources::CResourceHandle m_indexBuffer;
+		Microsoft::WRL::ComPtr<ID3D12Resource> m_positionBuffer;
+		Microsoft::WRL::ComPtr<ID3D12Resource> m_texCoordBuffer;
+		Microsoft::WRL::ComPtr<ID3D12Resource> m_normalBuffer;
+		Microsoft::WRL::ComPtr<ID3D12Resource> m_indexBuffer;
 
 	protected:
-		Resources::CResourceHandle m_positionUploadBuffer;
-		Resources::CResourceHandle m_texCoordUploadBuffer;
-		Resources::CResourceHandle m_normalUploadBuffer;
-		Resources::CResourceHandle m_indexUploadBuffer;
+		Microsoft::WRL::ComPtr<ID3D12Resource> m_positionUploadBuffer;
+		Microsoft::WRL::ComPtr<ID3D12Resource> m_texCoordUploadBuffer;
+		Microsoft::WRL::ComPtr<ID3D12Resource> m_normalUploadBuffer;
+		Microsoft::WRL::ComPtr<ID3D12Resource> m_indexUploadBuffer;
 
 	protected:
-		UINT m_vertexBufferViewCount = 0;
+		ID3D12Pageable* m_pageableResources[8]{ nullptr };
+
+	protected:
+		UINT m_bufferOfffset = 0;
 		D3D12_VERTEX_BUFFER_VIEW* m_vertexBufferView = nullptr;
 		D3D12_INDEX_BUFFER_VIEW m_indexBufferView{};
 
 	public:
-		inline UINT GetVertexBufferViewCount() const noexcept { return m_vertexBufferViewCount + 1; }
+		inline UINT GetVertexBufferViewCount() const noexcept { return m_bufferOfffset; }
 		inline const D3D12_VERTEX_BUFFER_VIEW* GetVertexBufferView() const noexcept { return m_vertexBufferView; }
 		inline const D3D12_INDEX_BUFFER_VIEW* GetIndexBufferView() const noexcept { return &m_indexBufferView; }
 
 	private:
 		static void CreateDefaultBuffer(
-			ID3D12Device* device,
 			ID3D12GraphicsCommandList* cmdList,
 			const void* initData,
 			UINT64 byteSize,
-			Resources::CResourceHandle& defaultBufferHandle,
-			Resources::CResourceHandle& uploadsBufferHandle
+			Microsoft::WRL::ComPtr<ID3D12Resource>& defaultBuffer,
+			Microsoft::WRL::ComPtr<ID3D12Resource>& uploadsBuffer
 		);
 
 	private:
-		virtual void CreateBufferHandle(
-			ID3D12Device* device,
-			ID3D12GraphicsCommandList* commandList
-		);
+		virtual void CreateBufferHandle(ID3D12GraphicsCommandList* commandList);
 		virtual void CreateBufferView();
 
 	public:
-		virtual void Initialize(
-			ID3D12Device* device,
-			ID3D12GraphicsCommandList* commandList
-		) override;
+		virtual void MakeResidentAsset() override;
+		virtual void EvictAsset() override;
+
+	public:
+		virtual void Initialize(ID3D12GraphicsCommandList* commandList) override;
 	};
 }
 

@@ -13,9 +13,8 @@ namespace PSO
 		Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
 
 	public:
-		void SetRootSignature(ID3D12Device* device, IDxcResult* compileResult);
+		void SetRootSignature(IDxcResult* compileResult);
 		void SetRootSignature(
-			ID3D12Device* device,
 			UINT numParameters,
 			D3D12_ROOT_PARAMETER* rootParams,
 			UINT numStaticSamplers,

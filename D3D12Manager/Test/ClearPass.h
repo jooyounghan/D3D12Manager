@@ -16,10 +16,7 @@ namespace Stage
 	class ClearPass : public AGraphicsPass
 	{
 	public:
-		ClearPass(
-			ID3D12Device* device, 
-			Graphics::CSwapchainContext* swapchainContext
-		);
+		ClearPass(Graphics::CSwapchainContext* swapchainContext);
 		~ClearPass() override = default;
 
 	protected:
@@ -32,11 +29,10 @@ namespace Stage
 		std::unique_ptr<PSO::CGraphicsPSO> m_graphicsPSO;
 
 	protected:
-		ID3D12Device* m_device = nullptr;
 		bool initialized = false;
 
 	protected:
-		std::unique_ptr<Asset::MeshAsset> m_triangleMesh;
+		std::unique_ptr<Resources::MeshAsset> m_triangleMesh;
 
 	protected:
 		virtual void ExcutePassImpl(Command::CCommandContext* commandContext) override;

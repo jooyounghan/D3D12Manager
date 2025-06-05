@@ -7,11 +7,8 @@ using namespace Command;
 using namespace Resources;
 using namespace Exception;
 
-AGraphicsGraph::AGraphicsGraph(
-	ID3D12Device* device, 
-	D3D12_COMMAND_LIST_TYPE commandListType
-)
-	: m_type(commandListType), m_queueContext(device, commandListType)
+AGraphicsGraph::AGraphicsGraph(D3D12_COMMAND_LIST_TYPE commandListType)
+	: m_type(commandListType), m_queueContext(commandListType)
 {
 
 }

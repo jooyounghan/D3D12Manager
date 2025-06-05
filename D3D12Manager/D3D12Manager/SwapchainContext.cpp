@@ -1,15 +1,16 @@
 #include "SwapchainContext.h"
+#include "D3D12App.h"
 #include "D3D12AppHelper.h"
+
 #include "DescriptorHelper.h"
 #include "d3dx12.h"
 
 using namespace Microsoft::WRL;
+using namespace App;
 using namespace Graphics;
 using namespace Resources;
 
 CSwapchainContext::CSwapchainContext(
-	ID3D12Device* device, 
-	IDXGIFactory* factory, 
 	ID3D12CommandQueue* commandQueue, 
 	UINT frameCount, 
 	UINT width, UINT height, 
@@ -33,6 +34,9 @@ CSwapchainContext::CSwapchainContext(
 	swapChainDesc.SampleDesc.Quality = sampleQuality;
 	swapChainDesc.Windowed = isWindowed;
 
+	ID3D12Device* device = CD3D12App::GApp->GetDevice();
+	IDXGIFactory* factory = CD3D12App::GApp->GetFactory();
+
 	IDXGISwapChain* swapChain = nullptr;
 	ThrowIfHResultFailed(factory->CreateSwapChain(commandQueue, &swapChainDesc, &swapChain));
 	m_swapChain = reinterpret_cast<IDXGISwapChain3*>(swapChain);
@@ -48,11 +52,13 @@ CSwapchainContext::CSwapchainContext(
 
 	m_backBufferResources = new ComPtr<ID3D12Resource>[m_frameCount];
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_backBufferRTVHeap->GetCPUDescriptorHandleForHeapStart());
+
+	DescriptorHelper& descriptorHelper = DescriptorHelper::GetInstance();
 	for (UINT n = 0; n < m_frameCount; n++)
 	{
 		ThrowIfHResultFailed(m_swapChain->GetBuffer(n, IID_PPV_ARGS(&m_backBufferResources[n])));
 		device->CreateRenderTargetView(m_backBufferResources[n].Get(), nullptr, rtvHandle);
-		rtvHandle.Offset(1, DescriptorHelper::RTVHeapIncrementSize);
+		rtvHandle.Offset(1, descriptorHelper.GetRTVHeapIncrementSize());
 	}
 
 	m_backBufferViewport.TopLeftX = 0.f;
@@ -104,8 +110,9 @@ void CSwapchainContext::Present(UINT syncInterval, UINT flags)
 
 D3D12_CPU_DESCRIPTOR_HANDLE CSwapchainContext::GetCurrentBackBufferRTVHandle()
 {
+	DescriptorHelper& descriptorHelper = DescriptorHelper::GetInstance();
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_backBufferRTVHeap->GetCPUDescriptorHandleForHeapStart());
-	rtvHandle.Offset(m_frameIndex, DescriptorHelper::RTVHeapIncrementSize);
+	rtvHandle.Offset(m_frameIndex, descriptorHelper.GetRTVHeapIncrementSize());
 	return rtvHandle;
 }
 

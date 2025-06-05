@@ -9,10 +9,7 @@ namespace Stage
 	class D3D12MANAGER_API AGraphicsGraph
 	{
 	public:
-		AGraphicsGraph(
-			ID3D12Device* device,
-			D3D12_COMMAND_LIST_TYPE commandListType
-		);
+		AGraphicsGraph(D3D12_COMMAND_LIST_TYPE commandListType);
 		virtual ~AGraphicsGraph() = default;
 
 	protected:

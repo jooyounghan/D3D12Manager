@@ -28,7 +28,6 @@ namespace Utilities
 			LPCWSTR entry,
 			LPCWSTR target,
 			OUT PSO::CShaderModule* shaderModule,
-			ID3D12Device* device = nullptr,
 			OUT PSO::CRootSignatureModule* rootSignatureModule = nullptr,
 			LPCWSTR* extraArgs = nullptr,
 			UINT extraArgCount = 0

@@ -1,8 +1,8 @@
 #include "MeshAsset.h"
-#include "ResidentManager.h"
+#include "D3D12App.h"
 #include "d3dx12.h"
 
-using namespace Asset;
+using namespace App;
 using namespace Resources;
 using namespace DirectX;
 
@@ -12,18 +12,11 @@ MeshAsset::MeshAsset(
 	UINT indicesCount, 
 	UINT* indices
 )
-	: m_positionsCount(positionsCount), 
+	: AAsset(EAssetType::ASSET_TYPE_MESH),
+	m_positionsCount(positionsCount), 
 	m_indicesCount(indicesCount),
 	m_positions(positions),
-	m_indices(indices),
-	m_positionBuffer(nullptr),
-	m_texCoordBuffer(nullptr),
-	m_normalBuffer(nullptr),
-	m_indexBuffer(nullptr),
-	m_positionUploadBuffer(nullptr),
-	m_texCoordUploadBuffer(nullptr),
-	m_normalUploadBuffer(nullptr),
-	m_indexUploadBuffer(nullptr)
+	m_indices(indices)
 {
 }
 
@@ -32,13 +25,12 @@ MeshAsset::~MeshAsset()
 	if (m_vertexBufferView) delete[] m_vertexBufferView;
 }
 
-void Asset::MeshAsset::CreateDefaultBuffer(
-	ID3D12Device* device, 
+void MeshAsset::CreateDefaultBuffer(
 	ID3D12GraphicsCommandList* cmdList, 
 	const void* initData, 
 	UINT64 byteSize,
-	CResourceHandle& defaultBufferHandle,
-	CResourceHandle& uploadsBufferHandle
+	Microsoft::WRL::ComPtr<ID3D12Resource>& defaultBuffer,
+	Microsoft::WRL::ComPtr<ID3D12Resource>& uploadsBuffer
 )
 {
 	D3D12_HEAP_PROPERTIES heapProps = {};
@@ -53,17 +45,18 @@ void Asset::MeshAsset::CreateDefaultBuffer(
 	resDesc.SampleDesc.Count = 1;
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	CResidentManager& residentManager = CResidentManager::GetInstance();
-	defaultBufferHandle = residentManager.CreateCommittedResource(
-		device, &heapProps, D3D12_HEAP_FLAG_NONE, &resDesc,
-		D3D12_RESOURCE_STATE_COMMON, nullptr
+	ID3D12Device* device = CD3D12App::GApp->GetDevice();
+
+	device->CreateCommittedResource(
+		&heapProps, D3D12_HEAP_FLAG_NONE, &resDesc,
+		D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(&defaultBuffer)
 	);
 
 	heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
-	uploadsBufferHandle = residentManager.CreateCommittedResource(
-		device, &heapProps, D3D12_HEAP_FLAG_NONE, &resDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ, nullptr
+	device->CreateCommittedResource(
+		&heapProps, D3D12_HEAP_FLAG_NONE, &resDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&uploadsBuffer)
 	);
 
 	D3D12_SUBRESOURCE_DATA subResourceData = {};
@@ -71,28 +64,25 @@ void Asset::MeshAsset::CreateDefaultBuffer(
 	subResourceData.RowPitch = byteSize;
 	subResourceData.SlicePitch = subResourceData.RowPitch;
 
-	UpdateSubresources(cmdList, defaultBufferHandle.Get(), uploadsBufferHandle.Get(), 0, 0, 1, &subResourceData);
+	UpdateSubresources(cmdList, defaultBuffer.Get(), uploadsBuffer.Get(), 0, 0, 1, &subResourceData);
 
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Transition.pResource = defaultBufferHandle.Get();
+	barrier.Transition.pResource = defaultBuffer.Get();
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COMMON;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	cmdList->ResourceBarrier(1, &barrier);
 }
 
-void MeshAsset::CreateBufferHandle(
-	ID3D12Device* device,
-	ID3D12GraphicsCommandList* commandList
-)
+void MeshAsset::CreateBufferHandle(ID3D12GraphicsCommandList* commandList)
 {
-	CreateDefaultBuffer(device, commandList, m_positions, sizeof(XMFLOAT3) * m_positionsCount, m_positionBuffer, m_positionUploadBuffer);
-	CreateDefaultBuffer(device, commandList, m_indices, sizeof(UINT) * m_indicesCount, m_indexBuffer, m_indexUploadBuffer);
+	CreateDefaultBuffer(commandList, m_positions, sizeof(XMFLOAT3) * m_positionsCount, m_positionBuffer, m_positionUploadBuffer);
+	CreateDefaultBuffer(commandList, m_indices, sizeof(UINT) * m_indicesCount, m_indexBuffer, m_indexUploadBuffer);
 
-	if (m_texCoords) CreateDefaultBuffer(device, commandList, m_texCoords, sizeof(XMFLOAT2) * m_positionsCount, m_texCoordBuffer, m_texCoordUploadBuffer);
-	if (m_normals) CreateDefaultBuffer(device, commandList, m_normals, sizeof(XMFLOAT3) * m_positionsCount, m_normalBuffer, m_normalUploadBuffer);
+	if (m_texCoords) CreateDefaultBuffer(commandList, m_texCoords, sizeof(XMFLOAT2) * m_positionsCount, m_texCoordBuffer, m_texCoordUploadBuffer);
+	if (m_normals) CreateDefaultBuffer(commandList, m_normals, sizeof(XMFLOAT3) * m_positionsCount, m_normalBuffer, m_normalUploadBuffer);
 }
 
 void MeshAsset::CreateBufferView()
@@ -100,36 +90,57 @@ void MeshAsset::CreateBufferView()
 	UINT viewCount = 1 + (m_texCoords ? 1 : 0) + (m_normals ? 1 : 0);
 	m_vertexBufferView = new D3D12_VERTEX_BUFFER_VIEW[viewCount];
 
-	m_vertexBufferView[m_vertexBufferViewCount].BufferLocation = m_positionBuffer.Get()->GetGPUVirtualAddress();
-	m_vertexBufferView[m_vertexBufferViewCount].SizeInBytes = sizeof(XMFLOAT3) * m_positionsCount;
-	m_vertexBufferView[m_vertexBufferViewCount].StrideInBytes = sizeof(XMFLOAT3);
+	m_vertexBufferView[m_bufferOfffset].BufferLocation = m_positionBuffer.Get()->GetGPUVirtualAddress();
+	m_vertexBufferView[m_bufferOfffset].SizeInBytes = sizeof(XMFLOAT3) * m_positionsCount;
+	m_vertexBufferView[m_bufferOfffset].StrideInBytes = sizeof(XMFLOAT3);
+
+	m_pageableResources[2 * m_bufferOfffset] = m_positionBuffer.Get();
+	m_pageableResources[2 * m_bufferOfffset + 1] = m_positionUploadBuffer.Get();
 
 	if (m_texCoords)
 	{
-		m_vertexBufferViewCount++;
-		m_vertexBufferView[m_vertexBufferViewCount].BufferLocation = m_texCoordBuffer.Get()->GetGPUVirtualAddress();
-		m_vertexBufferView[m_vertexBufferViewCount].SizeInBytes = sizeof(XMFLOAT2) * m_positionsCount;
-		m_vertexBufferView[m_vertexBufferViewCount].StrideInBytes = sizeof(XMFLOAT2);
+		m_bufferOfffset++;
+		m_vertexBufferView[m_bufferOfffset].BufferLocation = m_texCoordBuffer.Get()->GetGPUVirtualAddress();
+		m_vertexBufferView[m_bufferOfffset].SizeInBytes = sizeof(XMFLOAT2) * m_positionsCount;
+		m_vertexBufferView[m_bufferOfffset].StrideInBytes = sizeof(XMFLOAT2);
+
+		m_pageableResources[2 * m_bufferOfffset] = m_texCoordBuffer.Get();
+		m_pageableResources[2 * m_bufferOfffset + 1] = m_texCoordUploadBuffer.Get();
 	}
 
 	if (m_normals)
 	{
-		m_vertexBufferViewCount++;
-		m_vertexBufferView[m_vertexBufferViewCount].BufferLocation = m_normalBuffer.Get()->GetGPUVirtualAddress();
-		m_vertexBufferView[m_vertexBufferViewCount].SizeInBytes = sizeof(XMFLOAT3) * m_positionsCount;
-		m_vertexBufferView[m_vertexBufferViewCount].StrideInBytes = sizeof(XMFLOAT3);
-	}
+		m_bufferOfffset++;
+		m_vertexBufferView[m_bufferOfffset].BufferLocation = m_normalBuffer.Get()->GetGPUVirtualAddress();
+		m_vertexBufferView[m_bufferOfffset].SizeInBytes = sizeof(XMFLOAT3) * m_positionsCount;
+		m_vertexBufferView[m_bufferOfffset].StrideInBytes = sizeof(XMFLOAT3);
 
+		m_pageableResources[2 * m_bufferOfffset] = m_normalBuffer.Get();
+		m_pageableResources[2 * m_bufferOfffset + 1] = m_normalUploadBuffer.Get();
+	}
+	m_bufferOfffset++;
 	m_indexBufferView.BufferLocation = m_indexBuffer.Get()->GetGPUVirtualAddress();
 	m_indexBufferView.Format = DXGI_FORMAT_R32_UINT;
 	m_indexBufferView.SizeInBytes = sizeof(UINT) * m_indicesCount;
+
+	m_pageableResources[2 * m_bufferOfffset] = m_indexBuffer.Get();
+	m_pageableResources[2 * m_bufferOfffset + 1] = m_indexUploadBuffer.Get();
 }
 
-void MeshAsset::Initialize(
-	ID3D12Device* device,
-	ID3D12GraphicsCommandList* commandList
-)
+void Resources::MeshAsset::MakeResidentAsset()
 {
-	CreateBufferHandle(device, commandList);
+	ID3D12Device* device = CD3D12App::GApp->GetDevice();
+	device->MakeResident((m_bufferOfffset + 1) * 2, m_pageableResources);
+}
+
+void Resources::MeshAsset::EvictAsset()
+{
+	ID3D12Device* device = CD3D12App::GApp->GetDevice();
+	device->Evict((m_bufferOfffset + 1) * 2, m_pageableResources);
+}
+
+void MeshAsset::Initialize(ID3D12GraphicsCommandList* commandList)
+{
+	CreateBufferHandle(commandList);
 	CreateBufferView();
 }

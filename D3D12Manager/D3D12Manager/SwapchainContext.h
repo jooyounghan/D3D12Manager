@@ -7,8 +7,6 @@ namespace Graphics
 	{
 	public:
 		CSwapchainContext(
-			ID3D12Device* device,
-			IDXGIFactory* factory,
 			ID3D12CommandQueue* commandQueue,
 			UINT frameCount,
 			UINT width, UINT height,

@@ -15,10 +15,7 @@ namespace Stage
 	class RenderStage : public Stage::AGraphicsStage
 	{
 	public:
-		RenderStage(
-			ID3D12Device* device, 
-			Graphics::CSwapchainContext* swapchainContext
-		);
+		RenderStage(Graphics::CSwapchainContext* swapchainContext);
 		~RenderStage() override = default;
 
 	protected:
